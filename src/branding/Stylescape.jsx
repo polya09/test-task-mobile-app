@@ -24,7 +24,7 @@ function Zone({ x, y, w, h, className = '', style, children, tag: Tag = 'div' })
   )
 }
 
-function Photo({ photo, caption, tag = 'Photo placeholder', captionTop = false, className = '' }) {
+function Photo({ photo, caption, tag = 'Photo placeholder', captionTop = false, narrowCaption = false, className = '' }) {
   const classes = ['photo', photo.surface && 'photo--surface', className].filter(Boolean)
   return (
     <figure className={classes.join(' ')}>
@@ -35,7 +35,15 @@ function Photo({ photo, caption, tag = 'Photo placeholder', captionTop = false, 
       />
       {photo.placeholder && <span className="photo__tag">{tag}</span>}
       {caption && (
-        <figcaption className={captionTop ? 'photo__caption photo__caption--top' : 'photo__caption'}>
+        <figcaption
+          className={[
+            'photo__caption',
+            captionTop && 'photo__caption--top',
+            narrowCaption && 'photo__caption--narrow',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
           <strong>{caption.title}</strong>
           {caption.text}
         </figcaption>
@@ -75,18 +83,20 @@ export default function Stylescape() {
       <Zone x={140} y={1600} w={860} h={560}>
         <Photo
           photo={PHOTOS.lifestyle}
+          captionTop
+          narrowCaption
           caption={{
             title: '45° lifestyle',
-            text: 'Diverse people cooking, training or carrying groceries. Unposed, daylight, no gym floor.',
+            text: 'Real kitchens, daylight, unposed.',
           }}
         />
       </Zone>
 
       <Zone x={1060} y={1600} w={305} h={260}>
-        <Photo photo={PHOTOS.prep} tag="Placeholder" className="photo--round" />
+        <Photo photo={PHOTOS.prep} className="photo--round" />
       </Zone>
       <Zone x={1395} y={1600} w={305} h={260}>
-        <Photo photo={PHOTOS.dish} tag="Placeholder" className="photo--round" />
+        <Photo photo={PHOTOS.dish} className="photo--round" />
       </Zone>
 
       <Zone x={1060} y={1900} w={640}>
@@ -103,19 +113,12 @@ export default function Stylescape() {
       </Zone>
 
       {/* ---------- Band B · hero photography + app icon ---------- */}
-      <Zone x={1060} y={0} w={640} h={1240}>
-        <Photo
-          photo={PHOTOS.hero}
-          captionTop
-          caption={{
-            title: 'A well-lit training kitchen',
-            text: 'Top-down, real portions, warm neutral surfaces. Not a clinic, not a gym floor.',
-          }}
-        />
+      <Zone x={1060} y={0} w={640} h={1040}>
+        <Photo photo={PHOTOS.hero} />
       </Zone>
 
       {/* The app icon overlaps the hero frame — the one deliberate crossing on the left half */}
-      <Zone x={1060} y={1130} w={640} h={270}>
+      <Zone x={1060} y={930} w={640} h={270}>
         <div className="iconsizes">
           {ICON_SIZES.map((s) => (
             <figure key={s.size} style={{ width: s.size }}>
@@ -126,11 +129,15 @@ export default function Stylescape() {
         </div>
       </Zone>
 
-      <Zone x={1060} y={1435} w={640} tag="section">
+      <Zone x={1060} y={1235} w={640} tag="section">
         <h2 className="sc-label">App icon</h2>
         <p className="sc-caption" style={{ marginTop: 14 }}>
           The ring alone on graphite. The track holds down to 60 px.
         </p>
+      </Zone>
+
+      <Zone x={1060} y={1380} w={640} tag="section">
+        <p className="photo-lead">A well-lit training kitchen — not a clinic, not a gym floor.</p>
       </Zone>
 
       {/* ---------- Band C · colour + typography ---------- */}

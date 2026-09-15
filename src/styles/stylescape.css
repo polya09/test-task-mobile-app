@@ -169,13 +169,16 @@
   object-fit: cover;
 }
 
-/* a transparent cut-out never sits on bare grey — it gets a warm neutral bed */
+/* A transparent cut-out is never left floating: it gets a lit surface of its
+   own, a defined edge, and a contact shadow that follows the plate's alpha. */
 .photo--surface {
-  background: var(--k-paper);
+  background: var(--k-surface);
+  border: 2px solid var(--k-border);
 }
 
 .photo--surface img {
-  padding: 18px;
+  padding: 14px;
+  filter: drop-shadow(0 12px 18px rgba(28, 31, 35, 0.2));
 }
 
 .photo__tag {
@@ -227,6 +230,12 @@
 .photo__caption--top {
   top: 84px;
   bottom: auto;
+}
+
+/* keeps an overlaid caption off a face or a dish — it sits on background only */
+.photo__caption--narrow {
+  right: auto;
+  max-width: 400px;
 }
 
 .photo--round {
@@ -720,9 +729,10 @@
 
 /* transparent PNG of a plated dish: warm neutral bed, contained, never stretched */
 .ui-recipe__thumb--cutout {
-  padding: 6px;
+  padding: 8px;
   background: var(--k-paper);
   border: 2px solid var(--k-border);
+  filter: drop-shadow(0 6px 10px rgba(28, 31, 35, 0.18));
 }
 
 .ui-recipe__name {
@@ -826,4 +836,13 @@
 
 .ui-tags .ui-add {
   margin-inline-start: auto;
+}
+
+.photo-lead {
+  font-family: var(--k-font-display);
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--k-graphite);
 }

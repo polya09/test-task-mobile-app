@@ -61,11 +61,9 @@ The toolbar above the board offers:
 
 ```
 index.html
-scripts/
-  generate-placeholders.mjs   regenerates the photography placeholders
 public/
   favicon.svg                 app icon, reused as the tab icon
-  images/*.svg                photography placeholders (see "Photography" below)
+  images/                     photography, cropped to frame (see below)
 src/
   main.jsx                    entry, font + stylesheet imports
   App.jsx                     minimal history-API router (3 routes)
@@ -75,6 +73,7 @@ src/
   branding/
     BoardViewer.jsx           responsive fit/zoom frame for the fixed board
     Stylescape.jsx            the composition: every zone placed in board pixels
+    photos.js                 photography manifest: src, frame, focal point, fit
     sections/                 Intro, Colour, Typography, Motifs
     parts/                    Wordmark, AppIcon, PrecisionRing, PaceArcs,
                               RingConstruction, Icons, UiFragments
@@ -124,51 +123,49 @@ Self-hosted through npm, so nothing is fetched from a CDN at runtime:
 
 ---
 
-## Photography — placeholders, not licensed photos
+## Photography
 
-**The images in `public/images/` are clearly marked placeholders, not
-photographs.** This environment's network policy blocks outbound access to every
-stock-photo host (Unsplash, Pexels, Pixabay, Wikimedia — all refused at the
-egress proxy), so no royalty-free photograph could be downloaded and credited
-honestly. Inventing a source URL or a licence line would have been worse than an
-honest placeholder, so each frame ships as a locally generated SVG carrying the
-crop, ratio and warm neutral tonality the real shot calls for, stamped
-`PLACEHOLDER` and tagged in the interface.
+Four photographs, supplied by the client and already cropped to the ratio of the
+frame they sit in, so the board never scales or distorts them. Frames are wired
+through `src/branding/photos.js`; swapping one is a data change there, not a
+layout change.
 
-| File                             | Frame ratio | Intended photograph                                                   |
-| -------------------------------- | ----------- | --------------------------------------------------------------------- |
-| `photo-hero-kitchen.svg`         | 640 × 1240  | Hero: top-down meal in a well-lit training kitchen, real portions      |
-| `photo-lifestyle-groceries.svg`  | 860 × 560   | 45° lifestyle: diverse people cooking, training or carrying groceries  |
-| `photo-topdown-bowl.svg`         | 305 × 260   | Top-down grain bowl on stone                                           |
-| `photo-ingredients-linen.svg`    | 305 × 260   | Raw ingredients on linen                                               |
-| `photo-recipe-thumb.svg`         | 150 × 150   | Recipe card thumbnail                                                  |
+| File | Frame (board px) | Crop taken from the original | Placement |
+| ---- | ---------------- | ---------------------------- | --------- |
+| `photo-hero-pear-salad.jpg` | 640 × 1040 | 6720 × 4480 → x 1931, w 2757, full height | Hero block, top of the photography band |
+| `photo-lifestyle-kitchen-phone.jpg` | 860 × 560 | 6000 × 4000 → x 640, y 49, 5300 × 3451 | Wide lifestyle block, bottom left |
+| `photo-prep-parsley-hands.jpg` | 305 × 260 | 6000 × 4000 → x 1980, y 420, 3300 × 2813 | Photography-direction frame |
+| `photo-dish-chicken-salad.png` | 305 × 260 and 150 × 150 | alpha bbox trimmed, padded square | Compact food frame and the recipe-card thumbnail |
 
-**Source / licence: none — generated in this repository by
-`scripts/generate-placeholders.mjs`, no third-party rights involved.**
+Crop intent, frame by frame:
 
-To replace them with real photography, drop licensed files into `public/images/`
-under the same names (any web format), keep the frame ratios above, and record
-the source URL and licence for each one in this table. Photography direction:
-natural daylight; warm neutral surfaces (stone, linen, light wood); top-down for
-meals, 45° for lifestyle; realistic serving sizes; clearly visible ingredients;
-diverse people, unposed. Avoid floating cut-outs, dark food, bodybuilder poses,
-clinical imagery and over-styled garnishes.
+- **Hero** — the whole bowl kept intact as the focal point, with light surface on
+  every side, the pear above and the cutlery below. No text is laid over the
+  dish; the mood line sits on paper beneath the app-icon block instead.
+- **Lifestyle** — a wide crop holding the woman, the phone, the prepared board
+  and the bright kitchen in one frame, trimmed along the bottom to drop the dark
+  foreground clutter. Its caption is narrowed so it rests on the blurred
+  cabinetry and never crosses her face or the food.
+- **Prep** — tight on the hands, the parsley sprig and the herbs in the crate;
+  the dark oven and the out-of-focus fruit stay out of frame.
+- **Dish** — the cut-out keeps its transparency and is never left floating: it
+  sits on a white surface with a defined edge and a contact shadow that follows
+  the plate's alpha, both in the photography frame and in the recipe card.
 
-Regenerate the placeholders at any time with:
+Originals were 4–6 K and 55 MB in total; the versions in `public/images/` are
+cropped and re-encoded to 1.3 MB all together (JPEG q82 progressive, PNG with
+alpha preserved). The untouched originals remain in this branch's git history.
 
-```bash
-node scripts/generate-placeholders.mjs
-```
-
----
+**Licence:** supplied by the client, licence on file. Replace this line with the
+per-image source and licence before the board is published anywhere public.
 
 ## Quality checks performed
 
 - `npm run build` completes with no errors or warnings.
-- The board was inspected in Chromium at its full 3840 × 2160 design size and
-  per band; no content is clipped and the only overlaps are the two intentional
-  ones (app icon across the hero frame, progress card stepping off the graphite
-  panel).
+- The board was inspected in Chromium at its full 3840 × 2160 design size, per
+  band and per photographic frame; no content is clipped and the only overlaps
+  are the two intentional ones (app icon across the hero frame, progress card
+  stepping off the graphite panel).
 - Automated layout check: every zone measured against the board bounds — nothing
   extends past 3840 × 2160.
 - Responsive sweep at 390, 768, 1280, 1920 and 2560 px wide: the board keeps a
