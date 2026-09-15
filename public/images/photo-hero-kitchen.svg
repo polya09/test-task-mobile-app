@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="2480" viewBox="0 0 1280 2480" role="img">
+  <rect width="1280" height="2480" fill="#EDE7DB"/>
+
+  <rect y="1520" width="1280" height="960" fill="#DFCDAE"/>
+  <rect y="1520" width="1280" height="14" fill="#B3A891" fill-opacity="0.35"/>
+  
+  <circle cx="640" cy="800" r="447.2" fill="#C3B9A5" fill-opacity="0.5"/>
+  <circle cx="640" cy="800" r="430" fill="#F6F3EC"/>
+  <circle cx="640" cy="800" r="361.2" fill="none" stroke="#CEC3AE" stroke-width="9.5"/>
+  <rect x="726" y="797.6" width="66.6" height="45.3" rx="16.7" fill="#C7BC9E" transform="rotate(-7.1 759.3 820.3)"/>
+  <circle cx="722.4" cy="924.7" r="58" fill="#B5C199"/>
+  <rect x="591.6" y="845.7" width="142.7" height="97" rx="35.7" fill="#D8B98B" transform="rotate(-11.6 662.9 894.3)"/>
+  <circle cx="595.8" cy="856.3" r="54.4" fill="#C2A788"/>
+  <rect x="470.5" y="774.2" width="131.3" height="89.3" rx="32.8" fill="#ADB999" transform="rotate(-3.4 536.2 818.9)"/>
+  <rect x="456.3" y="789.8" width="110.6" height="75.2" rx="27.6" fill="#D2C2A1" transform="rotate(19 511.6 827.4)"/>
+  <circle cx="498.2" cy="739.1" r="48.1" fill="#BFA98D"/>
+  <circle cx="629" cy="624.7" r="63.2" fill="#C7BC9E"/>
+  <rect x="603.5" y="705.7" width="126.3" height="85.9" rx="31.6" fill="#B5C199" transform="rotate(-29.1 666.7 748.7)"/>
+  <rect x="678" y="701.4" width="104.6" height="71.1" rx="26.1" fill="#D8B98B" transform="rotate(-20.8 730.3 736.9)"/>
+  <circle cx="754.9" cy="803.5" r="67.8" fill="#C2A788"/>
+  <rect x="120" y="1660" width="440" height="300" rx="30" fill="#DFD8CA" transform="rotate(-6 340 1810)"/>
+  
+  <circle cx="360" cy="1820" r="197.6" fill="#C3B9A5" fill-opacity="0.5"/>
+  <circle cx="360" cy="1820" r="190" fill="#F6F3EC"/>
+  <circle cx="360" cy="1820" r="159.6" fill="none" stroke="#CEC3AE" stroke-width="4.2"/>
+  <rect x="373.2" y="1806.6" width="62.7" height="42.7" rx="15.7" fill="#C7BC9E" transform="rotate(12.5 404.5 1828)"/>
+  <circle cx="367.7" cy="1868" r="31.4" fill="#B5C199"/>
+  <circle cx="311" cy="1891.5" r="29.9" fill="#D8B98B"/>
+  <circle cx="336.8" cy="1806.2" r="14.5" fill="#C2A788"/>
+  <circle cx="370.8" cy="1754.4" r="26.2" fill="#ADB999"/>
+  <rect x="404.3" y="1733.2" width="42.8" height="29.1" rx="10.7" fill="#D2C2A1" transform="rotate(12.3 425.7 1747.8)"/>
+  <circle cx="900" cy="1790" r="150" fill="#F6F3EC"/>
+  <circle cx="900" cy="1790" r="104" fill="#B5C199" fill-opacity="0.75"/>
+  <rect x="740" y="2060" width="420" height="250" rx="26" fill="#DFD8CA" transform="rotate(5 950 2185)"/>
+  <circle cx="990.6" cy="2187.6" r="17.7" fill="#C7BC9E"/>
+  <rect x="926" y="2203.5" width="35.2" height="24" rx="8.8" fill="#B5C199" transform="rotate(10.7 943.6 2215.5)"/>
+  <circle cx="886.7" cy="2225.6" r="16.7" fill="#D8B98B"/>
+  <circle cx="901.3" cy="2134.5" r="15.9" fill="#C2A788"/>
+  <circle cx="980.4" cy="2140.2" r="22.9" fill="#ADB999"/>
+
+  <g stroke="#1C1F23" stroke-opacity="0.2" stroke-width="4" fill="none">
+    <path d="M45 135V45h90"/>
+    <path d="M1145 45h90v90"/>
+    <path d="M1235 2345v90h-90"/>
+    <path d="M135 2435H45v-90"/>
+  </g>
+  <text x="640" y="2422" text-anchor="middle"
+        font-family="Helvetica, Arial, sans-serif" font-size="38"
+        letter-spacing="8" fill="#1C1F23" fill-opacity="0.34">PLACEHOLDER</text>
+</svg>

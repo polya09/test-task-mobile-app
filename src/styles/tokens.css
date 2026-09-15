@@ -1,0 +1,41 @@
+/* KALORA — brand tokens.
+   Single source of truth for colour, type and spacing used by the stylescape.
+   Stage 3 (/design-system) will extend this file rather than replace it. */
+
+:root {
+  /* Structure */
+  --k-graphite: #1c1f23;
+  --k-paper: #f7f5ef;
+  --k-surface: #ffffff;
+  --k-muted: #6b6f76;
+  --k-border: #e5e7e3;
+
+  /* Brand + action */
+  --k-lime: #c6f432;
+  --k-lime-deep: #557a00;
+
+  /* Macronutrient data */
+  --k-protein: #c6f432;
+  --k-carbs: #ffa62b;
+  --k-fat: #8fd0f7;
+
+  /* Status */
+  --k-coral: #ff5a4e;
+
+  /* Ink pairs — graphite ink is the only ink allowed on lime, amber and blue */
+  --k-ink-on-light: var(--k-graphite);
+  --k-ink-on-dark: var(--k-paper);
+  --k-ink-on-accent: var(--k-graphite);
+
+  /* Type */
+  --k-font-display: 'Sora Variable', 'Sora', system-ui, sans-serif;
+  --k-font-text: 'Inter Variable', 'Inter', system-ui, sans-serif;
+
+  /* Board geometry — the stylescape is designed at 3840 x 2160 (16:9) */
+  --k-board-w: 3840;
+  --k-board-h: 2160;
+  --k-radius-s: 12px;
+  --k-radius-m: 24px;
+  --k-radius-l: 40px;
+  --k-radius-xl: 64px;
+}
