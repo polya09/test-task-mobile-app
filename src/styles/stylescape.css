@@ -169,6 +169,15 @@
   object-fit: cover;
 }
 
+/* a transparent cut-out never sits on bare grey — it gets a warm neutral bed */
+.photo--surface {
+  background: var(--k-paper);
+}
+
+.photo--surface img {
+  padding: 18px;
+}
+
 .photo__tag {
   position: absolute;
   left: 22px;
@@ -707,6 +716,13 @@
   border-radius: var(--k-radius-m);
   object-fit: cover;
   flex: none;
+}
+
+/* transparent PNG of a plated dish: warm neutral bed, contained, never stretched */
+.ui-recipe__thumb--cutout {
+  padding: 6px;
+  background: var(--k-paper);
+  border: 2px solid var(--k-border);
 }
 
 .ui-recipe__name {

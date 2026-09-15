@@ -89,13 +89,15 @@ export function FoodResultCard() {
 }
 
 export function RecipeCard({ thumb }) {
+  const cutout = thumb.fit === 'contain'
   return (
     <article className="ui-card">
       <div className="ui-recipe">
         <img
-          className="ui-recipe__thumb"
-          src={thumb}
-          alt="Placeholder for a top-down photograph of a chicken and grain bowl"
+          className={cutout ? 'ui-recipe__thumb ui-recipe__thumb--cutout' : 'ui-recipe__thumb'}
+          src={thumb.src}
+          alt={thumb.alt}
+          style={{ objectPosition: thumb.focus, objectFit: thumb.fit ?? 'cover' }}
         />
         <div>
           <h4 className="ui-recipe__name">High-Protein Chicken Bowl</h4>

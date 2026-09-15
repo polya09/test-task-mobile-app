@@ -14,8 +14,7 @@ import Wordmark from './parts/Wordmark'
 import AppIcon from './parts/AppIcon'
 import PaceArc from './parts/PaceArcs'
 import { CalorieProgressCard, FoodResultCard, RecipeCard } from './parts/UiFragments'
-
-const IMG = `${import.meta.env.BASE_URL}images/`
+import { PHOTOS } from './photos'
 
 function Zone({ x, y, w, h, className = '', style, children, tag: Tag = 'div' }) {
   return (
@@ -25,11 +24,16 @@ function Zone({ x, y, w, h, className = '', style, children, tag: Tag = 'div' })
   )
 }
 
-function Photo({ src, alt, caption, tag = 'Photo placeholder', captionTop = false, className = '' }) {
+function Photo({ photo, caption, tag = 'Photo placeholder', captionTop = false, className = '' }) {
+  const classes = ['photo', photo.surface && 'photo--surface', className].filter(Boolean)
   return (
-    <figure className={`photo ${className}`.trim()}>
-      <img src={src} alt={alt} />
-      <span className="photo__tag">{tag}</span>
+    <figure className={classes.join(' ')}>
+      <img
+        src={photo.src}
+        alt={photo.alt}
+        style={{ objectPosition: photo.focus, objectFit: photo.fit ?? 'cover' }}
+      />
+      {photo.placeholder && <span className="photo__tag">{tag}</span>}
       {caption && (
         <figcaption className={captionTop ? 'photo__caption photo__caption--top' : 'photo__caption'}>
           <strong>{caption.title}</strong>
@@ -70,8 +74,7 @@ export default function Stylescape() {
 
       <Zone x={140} y={1600} w={860} h={560}>
         <Photo
-          src={`${IMG}photo-lifestyle-groceries.svg`}
-          alt="Placeholder for a 45-degree lifestyle photograph of people carrying groceries in daylight"
+          photo={PHOTOS.lifestyle}
           caption={{
             title: '45° lifestyle',
             text: 'Diverse people cooking, training or carrying groceries. Unposed, daylight, no gym floor.',
@@ -80,20 +83,10 @@ export default function Stylescape() {
       </Zone>
 
       <Zone x={1060} y={1600} w={305} h={260}>
-        <Photo
-          src={`${IMG}photo-topdown-bowl.svg`}
-          alt="Placeholder for a top-down photograph of a grain bowl on stone"
-          tag="Placeholder"
-          className="photo--round"
-        />
+        <Photo photo={PHOTOS.prep} tag="Placeholder" className="photo--round" />
       </Zone>
       <Zone x={1395} y={1600} w={305} h={260}>
-        <Photo
-          src={`${IMG}photo-ingredients-linen.svg`}
-          alt="Placeholder for a top-down photograph of raw ingredients on linen"
-          tag="Placeholder"
-          className="photo--round"
-        />
+        <Photo photo={PHOTOS.dish} tag="Placeholder" className="photo--round" />
       </Zone>
 
       <Zone x={1060} y={1900} w={640}>
@@ -112,8 +105,7 @@ export default function Stylescape() {
       {/* ---------- Band B · hero photography + app icon ---------- */}
       <Zone x={1060} y={0} w={640} h={1240}>
         <Photo
-          src={`${IMG}photo-hero-kitchen.svg`}
-          alt="Placeholder for the hero photograph: a top-down meal in a well-lit training kitchen"
+          photo={PHOTOS.hero}
           captionTop
           caption={{
             title: 'A well-lit training kitchen',
@@ -190,7 +182,7 @@ export default function Stylescape() {
       </Zone>
 
       <Zone x={3184} y={1130} w={592}>
-        <RecipeCard thumb={`${IMG}photo-recipe-thumb.svg`} />
+        <RecipeCard thumb={PHOTOS.recipeThumb} />
       </Zone>
 
       <Zone x={3184} y={1500} w={592} tag="section">
