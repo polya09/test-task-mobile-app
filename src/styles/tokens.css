@@ -75,6 +75,8 @@
   --ds-action-ink: var(--k-graphite);
   --ds-action-quiet: #eefac2;              /* lime tint, for tertiary hover + active nav */
   --ds-focus: var(--k-lime-deep);          /* 5.0:1 on surface */
+  --ds-focus-width: 2px;                   /* one ring, 2 px, never doubled */
+  --ds-focus-offset: 2px;
 
   /* ---------- Status (never macro colours; always paired with an icon + label) ---------- */
   --ds-success-ink: #446200;               /* deep lime darkened, 7.0:1 on surface */

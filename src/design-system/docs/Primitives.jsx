@@ -47,7 +47,10 @@ export function Specimen({ label, note, surface = 'surface', width, align = 'sta
   // `width` is the component's real documented width, so the stage has to take
   // it rather than shrink to its content — otherwise a 430 px bottom bar gets
   // documented at whatever width its labels happen to need.
-  const sizing = width ? { flex: `0 1 ${width}px`, width: '100%', maxWidth: width } : undefined
+  //
+  // Sized with `width`, never a flex-basis: a basis resolves against the main
+  // axis, so inside a column stack it would set the specimen's *height*.
+  const sizing = width ? { width: `min(100%, ${width}px)` } : undefined
   return (
     <figure className="ds-specimen" style={sizing}>
       <div

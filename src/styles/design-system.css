@@ -6,6 +6,18 @@
    1 · PAGE SHELL, TOOLBAR AND CONTENTS RAIL
    ============================================================ */
 
+/* ---------- Focus ----------
+   A single 2 px deep-lime ring at a 2 px offset, on every focusable thing on
+   this page. It replaces the app shell's 3 px ring for the design system only,
+   so /branding is untouched. The ring never thickens a component's border:
+   one ring, outside the control, and the 1 px border stays as it is.
+   #557A00 on white is 5.04:1 — well past the 3:1 WCAG asks of a focus
+   indicator, and 2 px clears the 1 px minimum perimeter. */
+.ds-page :focus-visible {
+  outline: var(--ds-focus-width) solid var(--ds-focus);
+  outline-offset: var(--ds-focus-offset);
+}
+
 .ds-page {
   display: flex;
   flex-direction: column;
@@ -150,7 +162,6 @@
   min-height: var(--ds-target-min);
   padding: var(--ds-space-2) var(--ds-space-3);
   border-radius: var(--ds-radius-s);
-  border-inline-start: 2px solid transparent;
   font-size: var(--ds-body-m-size);
   font-weight: 500;
   color: var(--ds-text-secondary);
@@ -164,7 +175,6 @@
 
 .ds-rail__link[aria-current='true'] {
   background: var(--ds-action-quiet);
-  border-inline-start-color: var(--k-lime-deep);
   color: var(--ds-text-primary);
   font-weight: 600;
 }
@@ -521,7 +531,6 @@
 .ds-spec {
   padding: var(--ds-space-4);
   border: var(--ds-border-width) solid var(--ds-border-subtle);
-  border-inline-start: 3px solid var(--k-lime-deep);
   border-radius: var(--ds-radius-s);
   background: var(--ds-surface);
 }
@@ -643,17 +652,17 @@
 }
 
 .ds-callout--do {
-  border-inline-start: 3px solid var(--ds-success-ink);
+  border-color: var(--ds-success-border);
   background: var(--ds-success-surface);
 }
 
 .ds-callout--dont {
-  border-inline-start: 3px solid var(--ds-danger-ink);
+  border-color: var(--ds-danger-border);
   background: var(--ds-danger-surface);
 }
 
 .ds-callout--note {
-  border-inline-start: 3px solid var(--ds-text-secondary);
+  border-color: var(--ds-border-subtle);
   background: var(--ds-surface-sunken);
 }
 
@@ -1209,8 +1218,16 @@
     color var(--ds-dur-fast) var(--ds-ease);
 }
 
-.ds-btn:has(> svg:first-child) {
-  padding-inline-start: var(--ds-space-4);
+.ds-btn:not(.ds-btn--icon):has(> svg) {
+  padding-inline: var(--ds-space-4);
+}
+
+.ds-btn--sm:not(.ds-btn--icon):has(> svg) {
+  padding-inline: var(--ds-space-3);
+}
+
+.ds-btn--lg:not(.ds-btn--icon):has(> svg) {
+  padding-inline: var(--ds-space-5);
 }
 
 .ds-btn__label {
@@ -1221,7 +1238,6 @@
   min-height: var(--ds-control-h-sm);
   padding: 0 var(--ds-space-4);
   /* 36 px ink box inside a 44 px hit area */
-  outline-offset: 2px;
   position: relative;
 }
 
@@ -1330,20 +1346,12 @@
   padding: 0;
 }
 
-/* Focus — one ring for every control in the system */
-.ds-btn:focus-visible,
+/* Focus — declared once, in section 0 above, for everything on the page.
+   Components only opt their documented `.is-focus` state into the same ring. */
 .ds-btn.is-focus,
-.ds-chip:focus-visible,
-.ds-chip.is-focus,
-.ds-segmented__item:focus-visible,
-.ds-tabs__tab:focus-visible,
-.ds-bottomnav__item:focus-visible,
-.ds-row--action:focus-visible,
-.ds-toast__action:focus-visible,
-.ds-input__clear:focus-visible,
-.ds-stepper__btn:focus-visible {
-  outline: 3px solid var(--ds-focus);
-  outline-offset: 2px;
+.ds-chip.is-focus {
+  outline: var(--ds-focus-width) solid var(--ds-focus);
+  outline-offset: var(--ds-focus-offset);
 }
 
 /* Disabled */
@@ -1461,11 +1469,10 @@
 
 .ds-input:focus-within,
 .ds-field.is-focus .ds-input {
-  border-width: var(--ds-border-width-strong);
-  border-color: var(--ds-border-strong);
-  padding: 0 11px; /* keeps the control height identical when the border grows */
-  outline: 3px solid var(--ds-focus);
-  outline-offset: 2px;
+  /* Nothing about the border changes on focus — width or colour. The ring is
+     the whole signal, so the control never reads as two nested outlines. */
+  outline: var(--ds-focus-width) solid var(--ds-focus);
+  outline-offset: var(--ds-focus-offset);
 }
 
 .ds-input__control {
@@ -1541,11 +1548,6 @@
   resize: vertical;
 }
 
-.ds-input--area:focus-within,
-.ds-field.is-focus .ds-input--area {
-  padding: 11px;
-}
-
 /* Error */
 .ds-field--error .ds-input {
   border-width: var(--ds-border-width-strong);
@@ -1584,11 +1586,10 @@
   overflow: hidden;
 }
 
+.ds-stepper:focus-within,
 .ds-field.is-focus .ds-stepper {
-  border-width: var(--ds-border-width-strong);
-  border-color: var(--ds-border-strong);
-  outline: 3px solid var(--ds-focus);
-  outline-offset: 2px;
+  outline: var(--ds-focus-width) solid var(--ds-focus);
+  outline-offset: var(--ds-focus-offset);
 }
 
 .ds-field--error .ds-stepper {
@@ -2806,7 +2807,6 @@
   width: 100%;
   padding: var(--ds-space-3) var(--ds-space-4);
   border: var(--ds-border-width) solid var(--ds-border-subtle);
-  border-inline-start-width: 3px;
   border-radius: var(--ds-radius-s);
   background: var(--ds-surface);
 }
@@ -2843,7 +2843,6 @@
 .ds-alert--success {
   background: var(--ds-success-surface);
   border-color: var(--ds-success-border);
-  border-inline-start-color: var(--ds-success-ink);
 }
 .ds-alert--success .ds-alert__icon,
 .ds-alert--success .ds-alert__title {
@@ -2853,7 +2852,6 @@
 .ds-alert--warning {
   background: var(--ds-warning-surface);
   border-color: var(--ds-warning-border);
-  border-inline-start-color: var(--ds-warning-ink);
 }
 .ds-alert--warning .ds-alert__icon,
 .ds-alert--warning .ds-alert__title {
@@ -2863,7 +2861,6 @@
 .ds-alert--danger {
   background: var(--ds-danger-surface);
   border-color: var(--ds-danger-border);
-  border-inline-start-color: var(--ds-danger-ink);
 }
 .ds-alert--danger .ds-alert__icon,
 .ds-alert--danger .ds-alert__title {
@@ -2873,7 +2870,6 @@
 .ds-alert--info {
   background: var(--ds-info-surface);
   border-color: var(--ds-info-border);
-  border-inline-start-color: var(--ds-info-ink);
 }
 .ds-alert--info .ds-alert__icon,
 .ds-alert--info .ds-alert__title {

@@ -9,7 +9,7 @@ const STATES = [
   { key: 'default', label: 'Default' },
   { key: 'hover', label: 'Hover' },
   { key: 'pressed', label: 'Pressed' },
-  { key: 'focus', label: 'Focused', note: '3 px deep lime ring' },
+  { key: 'focus', label: 'Focused', note: '2 px deep lime ring, 2 px offset' },
   { key: 'disabled', label: 'Disabled', note: 'Not announced as an error' },
   { key: 'loading', label: 'Loading', note: 'aria-busy, label stays' },
 ]
@@ -50,7 +50,7 @@ export default function Actions() {
             ['Type', 'Label — Inter 600 13/16, 0.02em'],
             ['Fill', '--ds-action → hover --ds-action-hover → pressed --ds-action-pressed'],
             ['Ink', `--ds-text-on-accent (graphite) · ${ratio(INK.graphite, SURFACE.lime)}`],
-            ['Focus', '3 px --ds-focus ring, 2 px offset'],
+            ['Focus', '2 px --ds-focus ring at a 2 px offset — the border is unchanged, so there is no second ring'],
             ['Disabled', '--ds-surface-sunken fill, --ds-text-disabled ink, no shadow'],
           ]}
         />

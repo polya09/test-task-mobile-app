@@ -155,8 +155,8 @@ export default function Rules() {
           <tr>
             <td>Focus ring</td>
             <td>
-              3 px --ds-focus at {ratio(INK.deepLime, SURFACE.surface)}, 2 px offset, on every
-              interactive element.
+              2 px --ds-focus at {ratio(INK.deepLime, SURFACE.surface)}, 2 px offset, on every
+              interactive element. One ring, never doubled with a border change.
             </td>
           </tr>
           <tr>

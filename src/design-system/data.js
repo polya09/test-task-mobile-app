@@ -226,7 +226,7 @@ export const SEMANTIC_COLOURS = [
   { token: '--ds-text-on-accent', hex: INK.graphite, role: 'Ink on lime, amber, blue', on: 'Lime', bg: SURFACE.lime },
   { token: '--ds-text-disabled', hex: INK.disabled, role: 'Disabled controls — exempt from AA, held above 3:1', on: 'Sunken', bg: SURFACE.sunken },
   { token: '--ds-border-control', hex: INK.borderControl, role: 'Input and control boundaries', on: 'Surface', bg: SURFACE.surface },
-  { token: '--ds-focus', hex: INK.deepLime, role: '3 px focus ring, all interactives', on: 'Surface', bg: SURFACE.surface },
+  { token: '--ds-focus', hex: INK.deepLime, role: '2 px focus ring, all interactives', on: 'Surface', bg: SURFACE.surface },
   { token: '--ds-success-ink', hex: INK.success, role: 'Success text and icon', on: 'Success surface', bg: SURFACE.successSurface },
   { token: '--ds-warning-ink', hex: INK.warning, role: 'Warning text and icon', on: 'Warning surface', bg: SURFACE.warningSurface },
   { token: '--ds-danger-ink', hex: INK.danger, role: 'Error text and icon', on: 'Error surface', bg: SURFACE.dangerSurface },

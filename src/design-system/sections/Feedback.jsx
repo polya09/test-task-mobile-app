@@ -45,8 +45,8 @@ export default function Feedback() {
             rows={[
               ['Padding', '12 px 16 px — --ds-space-3 / --ds-space-4'],
               ['Radius', '12 px — --ds-radius-s'],
-              ['Border', '1 px in the tone’s border token, 1 px left edge widened to 3 px'],
-              ['Glyph', '20 px status icon in the tone’s ink, top-aligned with the title'],
+              ['Border', '1 px in the tone’s border token, uniform on all four sides'],
+              ['Glyph', '20 px status icon in the tone’s ink, top-aligned with the title — with the title, it is what names the status'],
               ['Title', 'Body M — Inter 600 15/24, preceded by a screen-reader-only tone word'],
               ['Body', 'Body S — Inter 400 13/20'],
               ['Gap', '12 px glyph → body — --ds-space-3'],
