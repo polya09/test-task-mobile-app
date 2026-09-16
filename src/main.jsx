@@ -9,6 +9,7 @@ import './styles/base.css'
 import './styles/board.css'
 import './styles/stylescape.css'
 import './styles/design-system.css'
+import './styles/app.css'
 
 import App from './App'
 

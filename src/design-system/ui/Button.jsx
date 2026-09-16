@@ -6,6 +6,10 @@
  * documentation can print a state that a static screenshot could not capture.
  * `.is-*` classes and the real pseudo-classes share one rule block, so the
  * documented state and the live state can never drift apart.
+ *
+ * A `className` passed in is appended to the component's own classes, never
+ * substituted for them: a caller adding one marker class must not be able to
+ * strip the button of its variant.
  */
 import Icon from '../../branding/parts/Icons'
 import UiIcon, { UI_ICON_NAMES } from './UiIcons'
@@ -39,6 +43,7 @@ export function Button({
   disabled = false,
   fullWidth = false,
   type = 'button',
+  className: extra,
   ...rest
 }) {
   const className = [
@@ -49,6 +54,7 @@ export function Button({
     fullWidth && 'ds-btn--block',
     loading && 'is-loading',
     stateClass(state),
+    extra,
   ]
     .filter(Boolean)
     .join(' ')
@@ -78,6 +84,7 @@ export function IconButton({
   state,
   disabled = false,
   loading = false,
+  className: extra,
   ...rest
 }) {
   const className = [
@@ -86,6 +93,7 @@ export function IconButton({
     VARIANTS[variant] ?? VARIANTS.secondary,
     loading && 'is-loading',
     stateClass(state),
+    extra,
   ]
     .filter(Boolean)
     .join(' ')

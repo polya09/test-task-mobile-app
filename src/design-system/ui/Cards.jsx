@@ -9,13 +9,18 @@
  *
  * All five share `ds-card`: 24 px radius, 16 px padding, 1 px subtle border,
  * white surface, small shadow. Nothing overrides those five values locally.
+ *
+ * Each card renders the documented reference data unless it is given its own.
+ * Handlers (`onAdd`, `onOpen`, `onSave`, `onAction`) are optional throughout:
+ * without them the cards are the static specimens the documentation shows,
+ * with them they are the same cards wired into a screen.
  */
 import Icon from '../../branding/parts/Icons'
 import { Button, IconButton } from './Button'
 import { Tag, Badge } from './Selection'
 import { CalorieRing, MacroBar } from './Progress'
 import { StatusIcon } from './StatusIcon'
-import { kcal, nf, MACROS, TARGET, CONSUMED_KCAL, REMAINING_KCAL } from '../data'
+import { kcal, nf, MACROS, TARGET, CONSUMED_KCAL } from '../data'
 
 export function Card({ children, className = '', tone = 'light', as: Tag_ = 'article', ...rest }) {
   return (
@@ -28,15 +33,29 @@ export function Card({ children, className = '', tone = 'light', as: Tag_ = 'art
   )
 }
 
-export function FoodCard({ item, action = 'add', selected = false }) {
+export function FoodCard({
+  item,
+  action = 'add',
+  selected = false,
+  onAdd,
+  onOpen,
+  onSave,
+  actionLabel = 'Add',
+  flag,
+}) {
   const energy = kcal(item.macros)
+  const Body = onOpen ? 'button' : 'div'
   return (
     <Card className="ds-foodcard">
       <div className="ds-foodcard__row">
-        <div className="ds-foodcard__body">
+        <Body
+          type={onOpen ? 'button' : undefined}
+          className={['ds-foodcard__body', onOpen && 'ds-foodcard__body--action'].filter(Boolean).join(' ')}
+          onClick={onOpen}
+        >
           <h4 className="ds-foodcard__name">{item.name}</h4>
           <p className="ds-foodcard__serving tnum">{item.serving}</p>
-        </div>
+        </Body>
         <p className="ds-foodcard__kcal tnum">
           {nf.format(energy)} <span>kcal</span>
         </p>
@@ -55,25 +74,26 @@ export function FoodCard({ item, action = 'add', selected = false }) {
           </Tag>
         </div>
         {action === 'add' ? (
-          <Button size="sm" icon="plus">
-            Add
+          <Button size="sm" icon="plus" onClick={onAdd}>
+            {actionLabel}
           </Button>
         ) : (
-          <IconButton icon="bookmark" label={`Save ${item.name}`} variant="tertiary" />
+          <IconButton icon="bookmark" label={`Save ${item.name}`} variant="tertiary" onClick={onSave} />
         )}
       </div>
       {selected && (
         <p className="ds-foodcard__flag">
           <StatusIcon tone="success" size={16} stroke={2.4} />
-          Added to today
+          {flag ?? 'Added to today'}
         </p>
       )}
     </Card>
   )
 }
 
-export function RecipeCard({ recipe, thumb }) {
+export function RecipeCard({ recipe, thumb, onOpen, onSave, saved = false, note, noteTone }) {
   const energy = kcal(recipe.macros)
+  const Body = onOpen ? 'button' : 'div'
   return (
     <Card className="ds-recipecard">
       <div className="ds-recipecard__row">
@@ -89,7 +109,11 @@ export function RecipeCard({ recipe, thumb }) {
             <Icon name="recipe" size={32} stroke={2} />
           </span>
         )}
-        <div className="ds-recipecard__body">
+        <Body
+          type={onOpen ? 'button' : undefined}
+          className={['ds-recipecard__body', onOpen && 'ds-recipecard__body--action'].filter(Boolean).join(' ')}
+          onClick={onOpen}
+        >
           <h4 className="ds-recipecard__name">{recipe.name}</h4>
           <p className="ds-recipecard__meta tnum">
             <span>
@@ -102,8 +126,15 @@ export function RecipeCard({ recipe, thumb }) {
             </span>
             <span>Serves {recipe.serves}</span>
           </p>
-        </div>
-        <IconButton icon="bookmark" label={`Save ${recipe.name}`} variant="tertiary" />
+        </Body>
+        <IconButton
+          icon="bookmark"
+          label={saved ? `Remove ${recipe.name} from saved` : `Save ${recipe.name}`}
+          variant="tertiary"
+          aria-pressed={onSave ? saved : undefined}
+          className={saved ? 'is-saved' : undefined}
+          onClick={onSave}
+        />
       </div>
 
       <div className="ds-recipecard__foot">
@@ -112,16 +143,22 @@ export function RecipeCard({ recipe, thumb }) {
         </p>
         <Badge tone="brand">{recipe.goal}</Badge>
       </div>
+      {note && (
+        <p className={`ds-foodcard__flag ds-foodcard__flag--${noteTone ?? 'success'}`}>
+          <StatusIcon tone={noteTone ?? 'success'} size={16} stroke={2.4} />
+          {note}
+        </p>
+      )}
     </Card>
   )
 }
 
-export function NutritionCard({ macros = MACROS, title = 'Macros today' }) {
+export function NutritionCard({ macros = MACROS, title = 'Macros today', meta }) {
   return (
     <Card className="ds-nutritioncard">
       <div className="ds-card__head">
         <h4 className="ds-card__title">{title}</h4>
-        <span className="ds-card__meta tnum">{nf.format(CONSUMED_KCAL)} kcal logged</span>
+        <span className="ds-card__meta tnum">{meta ?? `${nf.format(CONSUMED_KCAL)} kcal logged`}</span>
       </div>
       <div className="ds-nutritioncard__bars">
         {macros.map((m) => (
@@ -132,25 +169,40 @@ export function NutritionCard({ macros = MACROS, title = 'Macros today' }) {
   )
 }
 
-export function DayCard({ tone = 'dark' }) {
+export function DayCard({
+  tone = 'dark',
+  title = 'Today',
+  value = CONSUMED_KCAL,
+  target = TARGET.kcal,
+  macros = MACROS,
+  caption,
+  meta,
+  size = 148,
+}) {
+  const left = target - value
   return (
     <Card tone={tone} className="ds-daycard">
       <div className="ds-card__head">
-        <h4 className="ds-card__title">Today</h4>
-        <span className="ds-card__meta tnum">Target {nf.format(TARGET.kcal)} kcal</span>
+        <h4 className="ds-card__title">{title}</h4>
+        <span className="ds-card__meta tnum">{meta ?? `Target ${nf.format(target)} kcal`}</span>
       </div>
 
       <div className="ds-daycard__ring">
         <CalorieRing
-          value={CONSUMED_KCAL}
-          target={TARGET.kcal}
-          size={148}
+          value={value}
+          target={target}
+          size={size}
           stroke={13}
           tone={tone}
-          caption={`${nf.format(REMAINING_KCAL)} kcal remaining`}
+          caption={
+            caption ??
+            (left >= 0
+              ? `${nf.format(left)} kcal remaining`
+              : `${nf.format(Math.abs(left))} kcal over target`)
+          }
         />
         <div className="ds-daycard__bars">
-          {MACROS.map((m) => (
+          {macros.map((m) => (
             <MacroBar key={m.key} {...m} />
           ))}
         </div>
@@ -164,6 +216,7 @@ export function EmptyCard({
   title = 'No foods logged yet',
   text = 'Add your first meal to see calories and macros for today.',
   action = 'Log a food',
+  onAction,
 }) {
   return (
     <Card className="ds-empty">
@@ -172,7 +225,11 @@ export function EmptyCard({
       </span>
       <h4 className="ds-empty__title">{title}</h4>
       <p className="ds-empty__text">{text}</p>
-      <Button icon="plus">{action}</Button>
+      {action && (
+        <Button icon="plus" onClick={onAction}>
+          {action}
+        </Button>
+      )}
     </Card>
   )
 }

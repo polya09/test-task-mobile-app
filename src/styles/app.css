@@ -1,0 +1,665 @@
+/* KALORA — Stage 4, the interactive prototype at /app.
+ *
+ * This file adds no colour, type or spacing values of its own: every
+ * declaration below resolves to a --k-* or --ds-* token. It is layout only —
+ * the device frame, the screen scroller, the sheet overlay and the handful of
+ * screen-level arrangements that are not components.
+ *
+ * Component styling lives in design-system.css and is not touched here.
+ */
+
+/* ---------- The stage and the device frame ---------- */
+
+.ap-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ds-space-5);
+  min-height: 100%;
+  padding: var(--ds-space-6) var(--ds-space-4) var(--ds-space-8);
+  background: #e9e7e1;
+}
+
+.ap-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-3) var(--ds-space-5);
+  width: 100%;
+  max-width: 760px;
+}
+
+.ap-toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+}
+
+.ap-toolbar__label {
+  font-size: var(--ds-label-size);
+  line-height: var(--ds-label-lh);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ds-text-secondary);
+}
+
+.ap-toolbar__note {
+  flex: 1 1 100%;
+  max-width: 560px;
+  text-align: center;
+  font-size: var(--ds-body-s-size);
+  line-height: var(--ds-body-s-lh);
+  color: var(--ds-text-muted);
+}
+
+.ap-device {
+  position: relative;
+  flex: none;
+  width: var(--ap-device-w, 390px);
+  height: 844px;
+  max-height: calc(100vh - 176px);
+  min-height: 640px;
+  overflow: hidden;
+  border-radius: var(--ds-radius-xl);
+  background: var(--ds-bg);
+  box-shadow: var(--ds-shadow-lg);
+}
+
+/* ---------- The viewport inside the frame ---------- */
+
+.ap-viewport {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: var(--ds-bg);
+  color: var(--ds-text-primary);
+  font-family: var(--k-font-text);
+  font-size: var(--ds-body-m-size);
+  line-height: var(--ds-body-m-lh);
+}
+
+.ap-screen {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ap-viewport.is-locked .ap-screen {
+  overflow-y: hidden;
+}
+
+/* Content column. The bottom padding is the 96 px the design system reserves
+   so the last card never hides behind the navigation bar. */
+.ap-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-5);
+  padding: var(--ds-space-2) var(--ds-grid-margin) var(--ds-space-11);
+}
+
+.ap-page--flush {
+  padding-top: 0;
+}
+
+/* A pushed screen hides the bottom bar and carries its own sticky action,
+   so a 390 px viewport never stacks two bars. */
+.ap-page--pushed {
+  padding-bottom: var(--ds-space-5);
+}
+
+.ap-titleblock {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--ds-space-3);
+  padding-top: var(--ds-space-4);
+}
+
+.ap-title {
+  font-family: var(--k-font-display);
+  font-size: var(--ds-h2-size);
+  line-height: var(--ds-h2-lh);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ap-subtitle {
+  font-size: var(--ds-body-s-size);
+  line-height: var(--ds-body-s-lh);
+  color: var(--ds-text-muted);
+}
+
+.ap-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+}
+
+.ap-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--ds-space-3);
+}
+
+.ap-section__title {
+  font-family: var(--k-font-display);
+  font-size: var(--ds-h3-size);
+  line-height: var(--ds-h3-lh);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ap-section__meta {
+  font-size: var(--ds-caption-size);
+  line-height: var(--ds-caption-lh);
+  font-weight: 500;
+  color: var(--ds-text-muted);
+}
+
+.ap-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+}
+
+.ap-stack--tight {
+  gap: var(--ds-space-2);
+}
+
+.ap-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.ap-chiprow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+}
+
+/* A horizontally scrolling chip rail, so filters never wrap to three lines
+   at 390 px. The rail keeps the 20 px page margin as its end padding. */
+.ap-rail {
+  display: flex;
+  gap: var(--ds-space-2);
+  margin: 0 calc(var(--ds-grid-margin) * -1);
+  padding: var(--ds-space-1) var(--ds-grid-margin);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.ap-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.ap-rail > * {
+  flex: none;
+}
+
+/* A sticky search / filter bar under a screen header. */
+.ap-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-2) var(--ds-grid-margin) var(--ds-space-3);
+  background: var(--ds-bg);
+  border-bottom: var(--ds-border-width) solid var(--ds-border-subtle);
+}
+
+.ap-actions {
+  display: flex;
+  gap: var(--ds-space-3);
+}
+
+.ap-actions > * {
+  flex: 1 1 0;
+}
+
+/* ---------- Today ---------- */
+
+.ap-daylist {
+  display: flex;
+  flex-direction: column;
+}
+
+.ap-hint {
+  font-size: var(--ds-body-s-size);
+  line-height: var(--ds-body-s-lh);
+  color: var(--ds-text-muted);
+}
+
+.ap-remaining {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ds-space-2);
+}
+
+.ap-remaining__cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-1);
+  padding: var(--ds-space-3);
+  border-radius: var(--ds-radius-s);
+  background: var(--ds-surface-sunken);
+}
+
+.ap-remaining__name {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+  font-size: var(--ds-caption-size);
+  line-height: var(--ds-caption-lh);
+  font-weight: 500;
+  color: var(--ds-text-secondary);
+}
+
+.ap-remaining__dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: var(--ds-radius-pill);
+  background: var(--dot, var(--ds-protein));
+}
+
+.ap-remaining__value {
+  font-family: var(--k-font-display);
+  font-size: var(--ds-num-m-size);
+  line-height: var(--ds-num-m-lh);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ap-remaining__value.is-over {
+  color: var(--ds-warning-ink);
+}
+
+/* ---------- Scan ---------- */
+
+.ap-scan {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+}
+
+.ap-viewfinder {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--ds-radius-l);
+  background: var(--ds-surface-inverse);
+  overflow: hidden;
+}
+
+.ap-viewfinder__frame {
+  width: 62%;
+  aspect-ratio: 3 / 2;
+  border: var(--ds-border-width-strong) solid var(--ds-action);
+  border-radius: var(--ds-radius-s);
+}
+
+.ap-viewfinder__bars {
+  position: absolute;
+  display: flex;
+  align-items: stretch;
+  gap: 5px;
+  width: 44%;
+  height: 40%;
+}
+
+.ap-viewfinder__bars span {
+  display: block;
+  flex: none;
+  width: var(--w, 3px);
+  background: var(--ds-text-inverse);
+  opacity: 0.86;
+}
+
+.ap-viewfinder__status {
+  position: absolute;
+  bottom: var(--ds-space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  padding: var(--ds-space-2) var(--ds-space-4);
+  border-radius: var(--ds-radius-pill);
+  background: rgba(28, 31, 35, 0.72);
+  color: var(--ds-text-inverse);
+  font-size: var(--ds-caption-size);
+  line-height: var(--ds-caption-lh);
+  font-weight: 500;
+}
+
+.ap-simlabel {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-space-2);
+  padding: var(--ds-space-3);
+  border: var(--ds-border-width) dashed var(--ds-border-control);
+  border-radius: var(--ds-radius-s);
+  background: var(--ds-surface-sunken);
+  font-size: var(--ds-body-s-size);
+  line-height: var(--ds-body-s-lh);
+  color: var(--ds-text-secondary);
+}
+
+.ap-simlabel strong {
+  display: block;
+  color: var(--ds-text-primary);
+}
+
+/* ---------- Recipe detail ---------- */
+
+.ap-hero {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--ds-surface-sunken);
+}
+
+.ap-hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* A transparent cut-out is never left floating — the same rule the stylescape
+   states. It gets a lit surface, a defined edge and a contact shadow that
+   follows the plate's alpha. */
+.ap-hero--surface {
+  background: var(--ds-surface);
+  border-bottom: var(--ds-border-width-strong) solid var(--ds-border-subtle);
+}
+
+.ap-hero--surface .ap-hero__img {
+  padding: var(--ds-space-5);
+  object-fit: contain;
+  filter: drop-shadow(0 12px 18px rgba(28, 31, 35, 0.2));
+}
+
+.ap-hero--placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--ds-text-muted);
+}
+
+.ap-hero__back {
+  position: absolute;
+  top: var(--ds-space-3);
+  left: var(--ds-space-3);
+}
+
+.ap-hero__back .ds-btn {
+  background: var(--ds-surface);
+  box-shadow: var(--ds-shadow-md);
+}
+
+.ap-metarow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-2) var(--ds-space-4);
+  font-size: var(--ds-body-s-size);
+  line-height: var(--ds-body-s-lh);
+  color: var(--ds-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.ap-metarow span {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-1);
+}
+
+.ap-lede {
+  font-size: var(--ds-body-l-size);
+  line-height: var(--ds-body-l-lh);
+  color: var(--ds-text-secondary);
+}
+
+.ap-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+  counter-reset: step;
+}
+
+.ap-steps li {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: var(--ds-space-3);
+  font-size: var(--ds-body-m-size);
+  line-height: var(--ds-body-m-lh);
+  color: var(--ds-text-secondary);
+}
+
+.ap-steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-action);
+  color: var(--ds-action-ink);
+  font-family: var(--k-font-display);
+  font-size: var(--ds-caption-size);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A sticky commit bar on a pushed screen. */
+.ap-commit {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-3) var(--ds-grid-margin);
+  padding-bottom: var(--ds-space-4);
+  background: var(--ds-surface);
+  border-top: var(--ds-border-width) solid var(--ds-border-subtle);
+}
+
+.ap-commit > * {
+  flex: 1 1 auto;
+}
+
+.ap-commit__figure {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ap-commit__value {
+  font-family: var(--k-font-display);
+  font-size: var(--ds-num-m-size);
+  line-height: var(--ds-num-m-lh);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ap-commit__label {
+  font-size: var(--ds-caption-size);
+  line-height: var(--ds-caption-lh);
+  color: var(--ds-text-muted);
+}
+
+/* ---------- Sheets ---------- */
+
+.ap-sheetlayer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+}
+
+.ds-sheetframe--overlay {
+  height: 100%;
+  border-radius: 0;
+  background: none;
+}
+
+.ds-sheetframe--overlay .ds-sheetframe__scrim {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.ds-sheetframe--overlay .ds-sheet {
+  max-height: 88%;
+  padding-bottom: var(--ds-space-5);
+}
+
+.ap-sheetgrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-4);
+}
+
+.ap-portion {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-4);
+}
+
+.ap-portion__ring {
+  flex: none;
+}
+
+.ap-portion__bars {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-3);
+}
+
+/* ---------- Toast ---------- */
+
+.ap-toastlayer {
+  position: absolute;
+  left: var(--ds-space-4);
+  right: var(--ds-space-4);
+  bottom: 88px;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.ap-toastlayer--pushed {
+  bottom: var(--ds-space-5);
+}
+
+.ap-toastlayer .ds-toast {
+  pointer-events: auto;
+}
+
+/* The design system's search field draws its own clear affordance, so the
+   browser's native one would be a second, unlabelled × beside it. */
+.ap-viewport .ds-input--search input[type='search']::-webkit-search-cancel-button {
+  appearance: none;
+  display: none;
+}
+
+/* ---------- Header spacer (see ScreenHeader) ---------- */
+
+.ap-viewport .ds-header__spacer {
+  flex: none;
+  width: var(--ds-target-min);
+  height: var(--ds-target-min);
+}
+
+/* ---------- Card affordances added in Stage 4 ----------
+ *
+ * Scoped to .ap-viewport on purpose. These rules extend design-system
+ * components, so confining them to the prototype guarantees that the
+ * documentation board at /design-system cannot shift by a pixel.
+ */
+
+.ap-viewport .ds-foodcard__body--action,
+.ap-viewport .ds-recipecard__body--action {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* The tappable body spans the card's full height so the target clears 44 px
+   without changing the card's own geometry. */
+.ap-viewport .ds-foodcard__body--action::after,
+.ap-viewport .ds-recipecard__body--action::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.ap-viewport .ds-foodcard,
+.ap-viewport .ds-recipecard {
+  position: relative;
+}
+
+/* The bookmark and the Add button must stay above that stretched hit area. */
+.ap-viewport .ds-foodcard .ds-btn,
+.ap-viewport .ds-recipecard .ds-btn {
+  position: relative;
+  z-index: 1;
+}
+
+.ap-viewport .ds-btn--icon.is-saved {
+  background: var(--ds-action-quiet);
+  color: var(--ds-success-ink);
+}
+
+.ap-viewport .ds-foodcard__flag--info {
+  color: var(--ds-info-ink);
+}
+
+.ap-viewport .ds-foodcard__flag--warning {
+  color: var(--ds-warning-ink);
+}
+
+/* ---------- Full-bleed below the reference width ---------- */
+
+@media (max-width: 520px) {
+  .ap-stage {
+    gap: 0;
+    height: 100%;
+    padding: 0;
+  }
+
+  .ap-toolbar {
+    display: none;
+  }
+
+  /* Fill the shell's main area exactly, so the page behind never scrolls
+     and the navigation bar is always the last thing on screen. */
+  .ap-device {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    min-height: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}

@@ -1,16 +1,17 @@
-# KALORA — Brand Stylescape (Stage 2) + Design System (Stage 3)
+# KALORA — Stylescape (Stage 2), Design System (Stage 3), Prototype (Stage 4)
 
 KALORA is an AI-assisted UX/UI concept for a mobile calorie and macronutrient
 calculator, aimed at active adults aged 20–40 who train, cut, maintain or build.
 
-This repository holds **Stage 2 (branding) and Stage 3 (design system)**.
-It is a small static front end (React + Vite, no backend, no auth).
+This repository holds **Stage 2 (branding), Stage 3 (design system) and
+Stage 4 (the interactive prototype)**. It is a small static front end
+(React + Vite, no backend, no auth).
 
-| Route            | Stage | Status                                             |
-| ---------------- | ----- | -------------------------------------------------- |
-| `/branding`      | 2     | **Built** — the stylescape, 3840 × 2160 fixed board |
-| `/design-system` | 3     | **Built** — the component library and documentation |
-| `/app`           | 4     | Reserved placeholder                                |
+| Route            | Stage | Status                                                  |
+| ---------------- | ----- | ------------------------------------------------------- |
+| `/branding`      | 2     | **Built** — the stylescape, 3840 × 2160 fixed board      |
+| `/design-system` | 3     | **Built** — the component library and documentation      |
+| `/app`           | 4     | **Built** — the clickable mobile prototype               |
 
 Opening `/` redirects to `/branding`.
 
@@ -33,8 +34,8 @@ npm install
 npm run dev          # development server, printed URL, usually http://localhost:5173
 ```
 
-Then open **http://localhost:5173/branding** and
-**http://localhost:5173/design-system**.
+Then open **http://localhost:5173/branding**,
+**http://localhost:5173/design-system** and **http://localhost:5173/app**.
 
 ## Production build and preview
 
@@ -43,8 +44,8 @@ npm run build        # outputs to dist/
 npm run preview      # serves dist/ , usually http://localhost:4173
 ```
 
-Then open **http://localhost:4173/branding** and
-**http://localhost:4173/design-system**.
+Then open **http://localhost:4173/branding**,
+**http://localhost:4173/design-system** and **http://localhost:4173/app**.
 
 ## Viewing the stylescape
 
@@ -69,7 +70,7 @@ src/
   App.jsx                     minimal history-API router (3 routes)
   pages/
     Branding.jsx              /branding
-    Stub.jsx                  reserved stage 3 / stage 4 pages
+    DesignSystem.jsx          /design-system
   branding/
     BoardViewer.jsx           responsive fit/zoom frame for the fixed board
     Stylescape.jsx            the composition: every zone placed in board pixels
@@ -85,15 +86,29 @@ src/
                               Callout, PhoneFrame — documentation scaffolding only
     ui/                       the reusable components:
                               Button, Inputs, Selection, BottomNav, Cards,
-                              Progress, DataDisplay, Feedback, StatusIcon, UiIcons
+                              Progress, DataDisplay, Feedback, StatusIcon,
+                              UiIcons, Header
     sections/                 Principles, Foundations, Actions, Forms,
                               Navigation, DataComponents, Feedback, Rules
+  app/
+    AppPrototype.jsx          /app — device frame, router, sheet + toast layers
+    store.jsx                 one reducer: the day, targets, dishes, navigation
+    nutrition.js              every number in the prototype passes through here
+    data/
+      foods.js                27 foods and packaged products, macros per basis
+      recipes.js              13 recipes, macros per serving, tags, method
+    screens/                  Today, Log, Scan, DishBuilder, Recipes,
+                              RecipeDetail, Targets
+    sheets/                   PortionSheet, ServingsSheet, FiltersSheet,
+                              IngredientSheet
+    parts/                    Sheet (focus-trapped overlay), MacroReadout
   styles/
     tokens.css                brand tokens (--k-*) + Stage 3 tokens (--ds-*)
     base.css                  reset and app shell
     board.css                 viewer + board scaffolding
     stylescape.css            board-pixel section styles
     design-system.css         the .ds-* component and board styles
+    app.css                   Stage 4 layout only — no new colour or type values
 ```
 
 `tokens.css` is the single source of truth. Stage 3 **appends** to it rather
@@ -190,6 +205,161 @@ Built with `npm run build`, served from `dist/` and inspected in Chromium at
 
 ---
 
+## Stage 4 — the prototype (`/app`)
+
+A clickable mobile product, not a gallery of screens. Five labelled
+destinations, two screens that push over them and four sheets, all assembled
+from Stage 3 components. No component was restyled and no token was added.
+
+On a desktop the prototype sits in a device frame with a **390 px / 430 px**
+width switch and a **Reset prototype** button. Below 520 px the frame
+disappears and the app fills the viewport, which is the width it was designed
+at in the first place.
+
+### The two user stories, end to end
+
+**1 — "Calculate the calories in a dish or a specific product."**
+
+| | Route through the app |
+| - | - |
+| A packaged product | `Log` → search → **Portion & calories** sheet → *Add* → `Today` |
+| A scanned product | `Scan` → *Simulate scan* → same sheet, barcode matched → `Today` |
+| A dish you made | `Log` → *Dishes* → **Dish builder** → ingredients + servings → `Today` |
+| A correction | `Today` → tap an entry → same sheet in edit mode → save or remove |
+
+**2 — "Find a recipe that is suitable for me."**
+
+`Recipes` → *For today* / filters → **Recipe detail** → *Log this meal* →
+**Servings** sheet → `Today`, ring redrawn.
+
+### "Suitable for me" is computed, never labelled
+
+A recipe carries no verdict. `recipeFit()` compares one serving against what
+is actually left of the day and returns one of three, each as a sentence with
+a number in it:
+
+| Verdict | Test | What the card says |
+| ------- | ---- | ------------------ |
+| **fits** | inside the calories *and* every macro left | "Fits your remaining 830 kcal" |
+| **tight** | inside the calories, past one macro | "8 g over your remaining fat" |
+| **over** | past the calories left today | "74 kcal over what's left today" |
+
+Against the reference day — 830 kcal and 78 P / 70 C / 24 F left — the
+thirteen recipes split 10 / 2 / 1. Change the target or the goal on `Targets`
+and the whole list re-reads, because the comparison is made when the list is
+rendered, not baked into the data.
+
+Over budget is reported, never refused: the button still works. The app states
+the number and the person decides.
+
+### The numbers
+
+`src/app/nutrition.js` is the only place calories are produced, and it does it
+with the design system's own `kcal()`. A food holds macros per a stated basis
+(100 g, 100 ml, or one piece); a portion scales them; they are rounded once, to
+the grams that will actually be printed; and exactly those grams are handed to
+`kcal()`. A card, a ring and a sheet cannot disagree, because all three read
+the same rounded macros.
+
+The prototype opens on the **Stage 3 reference day**, rebuilt from the
+catalogue rather than copied:
+
+| Portion | Macros | Energy |
+| ------- | ------ | ------ |
+| Rolled Oats 60 g | 8 P / 39 C / 5 F | 233 kcal |
+| Greek Yogurt 150 g | 15 P / 8 C / 3 F | 119 kcal |
+| Banana 118 g | 1 P / 27 C / 0 F | 112 kcal |
+| Chicken Bowl, 1 serving | 42 P / 55 C / 15 F | 523 kcal |
+| Almonds 30 g | 6 P / 6 C / 15 F | 183 kcal |
+| **Total** | **72 P / 135 C / 38 F** | **1,170 kcal** |
+
+That is the figure `/design-system` documents, to the gram, and the Chicken
+Bowl's 523 kcal is the sum of four catalogue ingredients rather than a typed
+number. `macroTargets(2000, 'cut')` likewise returns exactly the documented
+150 / 205 / 62.
+
+A dish rounds **once**, at the serving. Whole grams are not additive — round
+each ingredient first and the error compounds — so no screen shows both a dish
+total and a per-serving figure that invite division.
+
+### States implemented
+
+- **Loading** — `LoadingList` while a food or recipe search resolves; a spinner
+  and a live barcode readout while the simulated scan runs.
+- **Empty** — no foods logged today; no search match, offering to build the
+  query as a dish; no recipe match, naming the filter to remove; no dishes yet;
+  no ingredients in the builder.
+- **Validation** — a portion outside 1–2,000 g, servings outside 1–10, a dish
+  with no name, a calorie target outside 1,200–4,000 kcal. Each disables the
+  primary and states the range; none of them says "invalid input".
+- **Success** — a toast with the energy added and an Undo, and the ring and
+  macro bars redrawn behind it.
+- **Over budget** — a warning alert in the sheet before logging, on the recipe
+  detail, and on `Today` once the day is past its target.
+
+### The scan is simulated, and says so
+
+There is no camera in a prototype, and pretending otherwise would be a lie told
+in the user's own interface. The viewfinder is drawn honestly, a dashed panel
+states **"Simulated scan — prototype only"**, and the triggers are labelled
+*Simulate scan* and *Simulate an unknown barcode*. The three packaged products
+and their barcodes are invented, so that no real product's nutrition is
+misstated.
+
+### Photography
+
+Only two of the four licensed photographs depict a dish, so only those two
+recipes carry an image; the rest use the design system's documented recipe-glyph
+placeholder rather than borrowing a photograph of something they are not. The
+chicken-salad cut-out is never left floating — it gets a lit surface, a defined
+edge and a contact shadow, the same rule the stylescape states.
+
+### What Stage 4 added to the design system
+
+Every addition is optional and defaults to the previous behaviour, so the
+documentation board renders identically (measured below).
+
+| Component | Addition |
+| --------- | -------- |
+| `Header.jsx` | New `ScreenHeader` — the header the Navigation section already specified, made reusable |
+| `Button`, `IconButton` | An incoming `className` is now **appended** rather than substituted, so a caller's marker class cannot strip a button of its variant — this was a real defect, and it was silently collapsing icon buttons below 44 px |
+| `TextField`, `SearchField`, `NumberField`, `SelectField`, `TextArea` | Passing `onChange` switches the same control to a controlled one; the stepper's + / − become live and accept `max` |
+| `FoodCard`, `RecipeCard` | `onAdd` / `onOpen` / `onSave` / `saved` / `note`, and a stretched hit area on the body |
+| `NutritionCard`, `DayCard` | Accept their own `value`, `target`, `macros` and `meta` instead of only the reference day |
+| `EmptyCard`, `StatePanel`, `Alert`, `Toast` | `onAction` |
+| `BottomSheet` | `mode="overlay"` — the same sheet with a live scrim and working footer buttons, in place of the documentation's stand-in screen |
+| `LoadingList` | A `label`, so "Searching foods" and "Finding recipes" announce correctly |
+
+CSS that extends a `ds-*` component is scoped under `.ap-viewport`, so the
+documentation board cannot shift by a pixel.
+
+### Quality checks performed
+
+Built with `npm run build`, served from `dist/` and driven in Chromium.
+
+- **Both flows walked end to end**, 41 captured states, **zero console errors,
+  zero page errors, zero failed requests**.
+- **Data.** The seeded day, scaled from the catalogue, returns
+  72 P / 135 C / 38 F = 1,170 kcal and 830 kcal remaining — matching
+  `/design-system` exactly. `macroTargets(2000, 'cut')` returns 150 / 205 / 62.
+- **Layout at 390 px and 430 px**, every screen scrolled to its end: **zero
+  elements overflowed by an in-flow child, zero horizontal page scroll**.
+- **Touch targets.** Every button, link, input, select and textarea measured,
+  counting the `::before` / `::after` hit-area padding: **zero below 44 × 44 px**.
+- **Contrast.** Every text node measured against its real composited backdrop:
+  the only pair below AA is a **disabled** button at 3.18:1, which WCAG 1.4.3
+  exempts and which the design system already documents at that ratio.
+- **Keyboard.** The 3 px `--ds-focus` ring appears on Tab; opening a sheet moves
+  focus into the dialog, Tab is trapped inside it, Escape closes it and focus
+  returns to the control that opened it.
+- **No regression.** `/branding` and `/design-system` were fingerprinted against
+  `main` — every element's position, size, colour, type, border, radius, opacity
+  and shadow — at 1440, 820, 430 and 390 px: **4,130 elements, zero differences**.
+  The only pixel that changes anywhere is the site-shell "App" nav link, which is
+  no longer greyed out because the route now exists.
+
+---
+
 ## Brand summary (what the board argues)
 
 - **Creative direction** — Bright Performance Nutrition. A well-lit training
@@ -267,7 +437,7 @@ untouched originals remain in this branch's git history.
 **Licence:** supplied by the client, licence on file. Replace this line with the
 per-image source and licence before the board is published anywhere public.
 
-## Quality checks performed
+## Quality checks — the stylescape
 
 - `npm run build` completes with no errors or warnings.
 - The board was inspected in Chromium at its full 3840 × 2160 design size, per
@@ -287,5 +457,6 @@ per-image source and licence before the board is published anywhere public.
 
 ## Scope
 
-Stages 2 and 3 stop here. Full mobile screens, user flows and the final
-prototype are Stage 4 and are intentionally **not** in this repository yet.
+The prototype covers the two required user stories and nothing else. There is
+deliberately **no** onboarding, authentication, subscription, notification,
+social feature or shopping list.

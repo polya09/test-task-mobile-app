@@ -1,24 +1,17 @@
 /**
- * Minimal history-API router. Three routes are reserved from the start
- * (/branding, /design-system, /app). Stages 2 and 3 are built; /app is reserved.
+ * Minimal history-API router. Three routes, all three now built:
+ * /branding (stage 2), /design-system (stage 3) and /app (stage 4).
  */
 import { useEffect, useState } from 'react'
 import Branding from './pages/Branding'
 import DesignSystem from './pages/DesignSystem'
-import Stub from './pages/Stub'
+import AppPrototype from './app/AppPrototype'
 
 const ROUTES = [
   { path: '/branding', label: 'Branding', ready: true },
   { path: '/design-system', label: 'Design system', ready: true },
-  { path: '/app', label: 'App', ready: false },
+  { path: '/app', label: 'App', ready: true },
 ]
-
-const STUBS = {
-  '/app': {
-    title: 'App screens',
-    text: 'Stage 4. Flows and screens for the calorie calculator and the recipe finder.',
-  },
-}
 
 function normalise(pathname) {
   const clean = pathname.replace(/\/+$/, '') || '/'
@@ -41,12 +34,17 @@ export default function App() {
     setPath(target)
   }
 
-  const stub = STUBS[path]
+  const skip =
+    path === '/design-system'
+      ? { href: '#ds-scroll', label: 'Skip to the design system' }
+      : path === '/app'
+        ? { href: '#ap-device', label: 'Skip to the prototype' }
+        : { href: '#stylescape', label: 'Skip to the stylescape' }
 
   return (
     <div className="app">
-      <a className="skip-link" href={path === '/design-system' ? '#ds-scroll' : '#stylescape'}>
-        {path === '/design-system' ? 'Skip to the design system' : 'Skip to the stylescape'}
+      <a className="skip-link" href={skip.href}>
+        {skip.label}
       </a>
 
       <header className="app__bar">
@@ -69,8 +67,8 @@ export default function App() {
       </header>
 
       <main className="app__main">
-        {stub ? (
-          <Stub title={stub.title} text={stub.text} />
+        {path === '/app' ? (
+          <AppPrototype />
         ) : path === '/design-system' ? (
           <DesignSystem />
         ) : (
