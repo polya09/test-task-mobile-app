@@ -333,6 +333,46 @@ documentation board renders identically (measured below).
 CSS that extends a `ds-*` component is scoped under `.ap-viewport`, so the
 documentation board cannot shift by a pixel.
 
+### Error, focus, and the radius hierarchy
+
+Two treatments were tightened after visual review.
+
+**A field in error never shows the lime focus ring.** Two differently coloured
+contours around one control is noise, not information, so error owns the whole
+treatment and focus is expressed inside that one hue:
+
+| State | Treatment |
+| ----- | --------- |
+| Resting | 2 px `--ds-danger` border, alert glyph, written message |
+| Focused | 2 px `--ds-danger-ink` border plus a 2 px ring flush at offset 0 — the two merge into a single 4 px edge |
+
+Weight carries the focus, not hue. Coral against danger ink is only **2.12:1**,
+short of the 3:1 a focus indicator needs, but the 2 px of newly inked pixels
+sit at **6.52:1** on the white field and **5.98:1** on the paper page, and meet
+the 2 px minimum perimeter. Valid fields keep the documented lime ring
+unchanged. The rule is written against `.ds-input` and `.ds-stepper`, which are
+the shells for text, search, select, textarea and numeric alike.
+
+**Radius is a four-step hierarchy**, every step from the documented scale, and
+every nested element visibly smaller-cornered than its container:
+
+| Token | | Used by |
+| ----- | - | ------- |
+| `--ds-radius-l` | 24 px | Large containers and major summary cards — the daily progress card, the macro summary, the dish builder's running total, the bottom sheet, the navigation bar |
+| `--ds-radius-m` | 16 px | Standard cards, list bodies, panels and alerts — food and recipe cards, the logged list, state panels, the viewfinder |
+| `--ds-radius-s` | 12 px | Every control and small tile — button, input, stepper, select, thumbnails, the remaining-macro tiles |
+| `--ds-radius-xs` | 8 px | Macro bars and inline markers |
+| `--ds-radius-pill` | — | Chips, tags, badges and compact status markers only |
+
+A corner is perceived against the height it sits on, which is what the review
+caught: the same 24 px that suits a 198 px card is two-thirds of a pill on a
+72 px list row. For the same reason all controls were unified on 12 px — 16 px
+is 73% of a pill on a 44 px button and 89% on a 36 px one, which is the shape
+language the system reserves for chips.
+
+Both changes are scoped under `.ap-viewport`, so the documentation board is
+untouched.
+
 ### Quality checks performed
 
 Built with `npm run build`, served from `dist/` and driven in Chromium.
@@ -352,6 +392,11 @@ Built with `npm run build`, served from `dist/` and driven in Chromium.
 - **Keyboard.** The 3 px `--ds-focus` ring appears on Tab; opening a sheet moves
   focus into the dialog, Tab is trapped inside it, Escape closes it and focus
   returns to the control that opened it.
+- **Error and focus.** Asserted on the live computed styles of a text field and
+  a numeric field, in all three states: valid-focused keeps the lime ring at
+  2 px / 2 px offset; error-resting is a 2 px coral border with no ring;
+  error-focused is a 2 px danger-ink border with a 2 px danger-ink ring at
+  offset 0 and no lime anywhere.
 - **No regression.** `/branding` and `/design-system` were fingerprinted against
   `main` — every element's position, size, colour, type, border, radius, opacity
   and shadow — at 1440, 820, 430 and 390 px: **4,130 elements, zero differences**.

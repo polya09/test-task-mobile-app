@@ -639,6 +639,104 @@
   color: var(--ds-warning-ink);
 }
 
+/* ============================================================
+   ERROR + FOCUS, COMBINED
+   ============================================================
+
+   A field in error never shows the lime focus ring. Two differently
+   coloured contours around one control is noise, not information — so
+   error owns the whole treatment and focus is expressed inside that one
+   colour.
+
+   Resting error  — 2 px --ds-danger (coral), the documented indicator.
+   Focused error  — 2 px --ds-danger-ink plus a 2 px ring flush against it
+                    at offset 0, so the two merge into a single 4 px edge
+                    rather than reading as a second contour.
+
+   The weight change is what carries the focus, not the hue: coral against
+   danger ink is only 2.12:1, short of the 3:1 a focus indicator needs, but
+   the 2 px of newly inked pixels sit at 6.52:1 on the white field and
+   5.98:1 on the paper page — comfortably past it, and past the 2 px
+   minimum perimeter area.
+
+   Non-error focus is untouched: it stays the documented lime ring.
+   ============================================================ */
+
+.ap-viewport .ds-field--error .ds-input:focus-within,
+.ap-viewport .ds-field--error .ds-stepper:focus-within,
+.ap-viewport .ds-field--error.is-focus .ds-input,
+.ap-viewport .ds-field--error.is-focus .ds-stepper {
+  border-color: var(--ds-danger-ink);
+  outline: var(--ds-border-width-strong) solid var(--ds-danger-ink);
+  outline-offset: 0;
+}
+
+/* The control inside the shell never draws its own ring — the shell is the
+   whole signal, in error exactly as it is at rest. */
+.ap-viewport .ds-field--error .ds-input__control:focus,
+.ap-viewport .ds-field--error .ds-stepper__control:focus,
+.ap-viewport .ds-field--error .ds-stepper__btn:focus-visible {
+  outline: none;
+}
+
+/* A stepper button is its own target, so keyboard focus on it still has to be
+   visible. Inside an error field it takes the same danger ink, inset so it
+   never crosses the shell's edge. */
+.ap-viewport .ds-field--error .ds-stepper__btn:focus-visible {
+  box-shadow: inset 0 0 0 var(--ds-border-width-strong) var(--ds-danger-ink);
+}
+
+/* ============================================================
+   RADIUS HIERARCHY
+   ============================================================
+
+   Four steps, all from the documented scale, each visibly smaller than the
+   one it sits inside:
+
+     24  --ds-radius-l     large containers and major summary cards
+                           (daily progress, macro summary, the dish builder's
+                           running total, the bottom sheet, the nav bar)
+     16  --ds-radius-m     standard cards, list bodies, panels, alerts
+     12  --ds-radius-s     controls and small tiles nested in a card
+      8  --ds-radius-xs    macro bars and inline markers
+    pill --ds-radius-pill  chips, tags, badges and compact status only
+
+   The 24 px tier is the design system's card default, so tier 1 needs no
+   rule — only the tiers below it are restated here.
+   ============================================================ */
+
+/* Tier 2 — standard cards, list bodies and panels drop to 16 px. At 24 px a
+   single-row list reads as a pill: the ingredient row on the dish builder was
+   64 px tall against a 24 px corner. */
+.ap-viewport .ds-foodcard,
+.ap-viewport .ds-recipecard,
+.ap-viewport .ds-empty,
+.ap-viewport .ds-statepanel,
+.ap-viewport .ds-list__body,
+.ap-viewport .ds-alert,
+.ap-viewport .ap-viewfinder,
+.ap-viewport .ap-simlabel {
+  border-radius: var(--ds-radius-m);
+}
+
+/* Tier 3 — every control takes one radius, the 12 px the design system
+   documents for inputs, so button, input, stepper and select read as one
+   family. A corner is perceived against the height it sits on: 16 px is 73%
+   of a pill on a 44 px button and 89% on a 36 px one, which is the shape
+   language reserved for chips. At 12 px the control tier is unmistakably
+   inside the 16 px card and the 24 px container. */
+.ap-viewport .ds-btn {
+  border-radius: var(--ds-radius-s);
+}
+
+/* Compact status markers sit in the same rows as tags and chips, so they take
+   the same pill. A badge at 8 px beside a pill tag was the one-off. */
+.ap-viewport .ds-badge,
+.ap-viewport .ds-macro__over,
+.ap-viewport .ds-goal__status {
+  border-radius: var(--ds-radius-pill);
+}
+
 /* ---------- Full-bleed below the reference width ---------- */
 
 @media (max-width: 520px) {
