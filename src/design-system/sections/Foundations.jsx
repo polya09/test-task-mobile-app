@@ -318,7 +318,7 @@ export default function Foundations() {
 
         <Block
           title="Icon sizing"
-          rule="Five sizes on the brand's 24 px grid. 24 px is the default; anything smaller keeps the 2 px stroke and loses detail, not weight."
+          rule="Five sizes on the brand's 24 px grid. 24 px is the default; anything smaller keeps the stroke and loses detail, not weight."
         >
           <div className="ds-iconsizes">
             {ICON_SIZES.map((s) => (
@@ -403,6 +403,37 @@ export default function Foundations() {
               </figure>
             ))}
           </div>
+
+          <p className="ds-iconset__group">Small-size variants — 24 px, 1.75 px stroke</p>
+          <div className="ds-iconset">
+            {['flame', 'recipe'].flatMap((name) => [
+              <figure className="ds-iconcell" key={`${name}-full`}>
+                <Icon name={name} size={24} stroke={1.75} title={`${name}, full detail`} />
+                <figcaption>{name} · full</figcaption>
+              </figure>,
+              <figure className="ds-iconcell" key={`${name}-simple`}>
+                <Icon name={name} size={24} stroke={1.75} detail="simple" title={`${name}, simplified`} />
+                <figcaption>{name} · simple</figcaption>
+              </figure>,
+            ])}
+          </div>
+
+          <Callout tone="note" title="Why two glyphs carry a small-size variant">
+            <p>
+              Two of the eight product icons hold interior detail that reads at editorial sizes and
+              turns to a blob at 24 px: the flame&rsquo;s inner flame, and the recipe bowl&rsquo;s three
+              ingredient circles — at r 1.3–2.1 a 1.75 px stroke very nearly closes them. Measured as
+              ink coverage on a 24 px box, that put recipe at three times the weight of the plus and
+              made both glyphs read heavier than their neighbours in the bottom bar.
+            </p>
+            <p>
+              <TokenRef>detail=&quot;simple&quot;</TokenRef> swaps in optically corrected drawings —
+              the flame keeps the brand outline and drops its inner flame, the bowl narrows from 17.2
+              to 14.4 units and its circles become two open steam strokes. Same grid, same stroke, same
+              rounded caps and joins. The default is untouched, so every editorial use renders exactly
+              as the stylescape drew it.
+            </p>
+          </Callout>
         </Block>
       </Section>
     </>

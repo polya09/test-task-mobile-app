@@ -4,7 +4,12 @@
  * The active item is marked three ways so it is never colour alone: a lime
  * pill behind the icon, a 600-weight label, and `aria-current="page"`.
  * Each item is a 56 px tall, ≥64 px wide target, well past the 44 px minimum.
+ *
+ * The icon never changes between states — same glyph, same 24 px box, same
+ * 1.75 px stroke, active or not. Weight is the label's job, not the glyph's.
  */
+const NAV_ICON_SIZE = 24
+const NAV_ICON_STROKE = 1.75
 import { useState } from 'react'
 import Icon from '../../branding/parts/Icons'
 
@@ -34,7 +39,12 @@ export function BottomNav({ active = 'today', onChange, items = NAV_ITEMS }) {
             onClick={() => set(item.id)}
           >
             <span className="ds-bottomnav__pill">
-              <Icon name={item.icon} size={24} stroke={isActive ? 2.3 : 2} />
+              <Icon
+                name={item.icon}
+                size={NAV_ICON_SIZE}
+                stroke={NAV_ICON_STROKE}
+                detail="simple"
+              />
             </span>
             <span className="ds-bottomnav__label">{item.label}</span>
           </button>

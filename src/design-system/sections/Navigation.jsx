@@ -17,7 +17,7 @@ export default function Navigation() {
     >
       <Block
         title="Bottom navigation"
-        rule="The active destination is marked three ways — a lime pill, a heavier label, and aria-current — so it survives greyscale and colour-blind viewing."
+        rule="The active destination is marked three ways — a lime pill, a heavier label, and aria-current — so it survives greyscale and colour-blind viewing. The glyph itself never changes: same drawing, same 24 px box, same 1.75 px stroke, active or not."
       >
         <Specimen label="Bottom navigation — “Today” active" surface="paper" width={430}>
           <BottomNav active="today" />
@@ -31,7 +31,8 @@ export default function Navigation() {
           rows={[
             ['Bar height', '64 px + safe-area inset'],
             ['Item', `${NAV_ITEMS.length} items, each ≥ 64 px wide × 56 px tall — past the 44 px minimum`],
-            ['Icon', '24 px — --ds-icon-m; stroke thickens to 2.3 px when active'],
+            ['Icon', '24 px — --ds-icon-m, 1.75 px stroke, identical in both states'],
+            ['Optical weight', 'Flame and recipe use the simplified 24 px glyph variants, so no destination reads heavier than its neighbours'],
             ['Active pill', '44 × 28 px, radius pill, --ds-action fill, graphite glyph'],
             ['Label', 'Caption — Inter 12/16; weight 600 active, 500 inactive'],
             ['Inactive ink', `--ds-text-muted · ${ratio(INK.muted, SURFACE.surface)} on surface`],
@@ -75,7 +76,8 @@ export default function Navigation() {
         <Callout tone="dont" title="Never">
           <p>
             Never drop the labels to fit a sixth destination, never let the active state rest on colour
-            alone, and never float the bar over content without the reserved bottom padding.
+            alone, never float the bar over content without the reserved bottom padding, and never
+            thicken the active glyph&rsquo;s stroke — weight is the label&rsquo;s job, not the icon&rsquo;s.
           </p>
         </Callout>
       </Block>
