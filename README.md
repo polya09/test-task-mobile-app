@@ -125,36 +125,43 @@ Self-hosted through npm, so nothing is fetched from a CDN at runtime:
 
 ## Photography
 
-Four photographs, supplied by the client and already cropped to the ratio of the
-frame they sit in, so the board never scales or distorts them. Frames are wired
-through `src/branding/photos.js`; swapping one is a data change there, not a
-layout change.
+Four photographs, supplied by the client. Files are stored **full-frame** — no
+pixel cropping — and each frame composes its own crop with `object-fit` and
+`object-position`, wired through `src/branding/photos.js`. Re-framing a shot is
+a one-line change to its `focus` value and never touches the layout.
 
-| File | Frame (board px) | Crop taken from the original | Placement |
-| ---- | ---------------- | ---------------------------- | --------- |
-| `photo-hero-pear-salad.jpg` | 640 × 1040 | 6720 × 4480 → x 1931, w 2757, full height | Hero block, top of the photography band |
-| `photo-lifestyle-kitchen-phone.jpg` | 860 × 560 | 6000 × 4000 → x 640, y 49, 5300 × 3451 | Wide lifestyle block, bottom left |
-| `photo-prep-parsley-hands.jpg` | 305 × 260 | 6000 × 4000 → x 1980, y 420, 3300 × 2813 | Photography-direction frame |
-| `photo-dish-chicken-salad.png` | 305 × 260 and 150 × 150 | alpha bbox trimmed, padded square | Compact food frame and the recipe-card thumbnail |
+| File | Frame (board px) | Fit | Focus | Placement |
+| ---- | ---------------- | --- | ----- | --------- |
+| `photo-hero-pear-salad.webp` | 640 × 1040 | cover | `49% 50%` | Hero block, top of the photography band |
+| `photo-lifestyle-kitchen-phone.webp` | 860 × 560 | cover | `50% 42%` | Wide lifestyle block, bottom left |
+| `photo-prep-parsley-hands.webp` | 305 × 260 | cover | `58% 50%` | Photography-direction frame |
+| `photo-dish-chicken-salad.webp` | 305 × 260 and 150 × 150 | contain | `50% 50%` | Compact food frame and the recipe-card thumbnail |
 
-Crop intent, frame by frame:
+Why those focus values:
 
-- **Hero** — the whole bowl kept intact as the focal point, with light surface on
-  every side, the pear above and the cutlery below. No text is laid over the
-  dish; the mood line sits on paper beneath the app-icon block instead.
-- **Lifestyle** — a wide crop holding the woman, the phone, the prepared board
-  and the bright kitchen in one frame, trimmed along the bottom to drop the dark
-  foreground clutter. Its caption is narrowed so it rests on the blurred
-  cabinetry and never crosses her face or the food.
-- **Prep** — tight on the hands, the parsley sprig and the herbs in the crate;
-  the dark oven and the out-of-focus fruit stay out of frame.
-- **Dish** — the cut-out keeps its transparency and is never left floating: it
-  sits on a white surface with a defined edge and a contact shadow that follows
-  the plate's alpha, both in the photography frame and in the recipe card.
+- **Hero** — a portrait frame against a landscape source, so the visible window
+  is the middle 41% of the width. Held just left of centre, that window contains
+  the whole bowl with light surface either side, the pear above and the cutlery
+  below. No text is laid over the dish.
+- **Lifestyle** — near-identical ratios, biased slightly above centre to favour
+  her, the phone and the prepared board. Its caption is capped in width so it
+  rests on the blurred cabinetry and never crosses her face or the food.
+- **Prep** — pushed right of centre so the crop lands on the hands, the sprig
+  and the herbs rather than the dark oven along the left edge.
+- **Dish** — a cut-out, so it is contained rather than covered, and never left
+  floating: it sits on a lit surface with a defined edge and a contact shadow
+  that follows the plate's alpha.
 
-Originals were 4–6 K and 55 MB in total; the versions in `public/images/` are
-cropped and re-encoded to 1.3 MB all together (JPEG q82 progressive, PNG with
-alpha preserved). The untouched originals remain in this branch's git history.
+### Encoding
+
+| | Original | Shipped |
+| --- | --- | --- |
+| Format | JPEG / PNG | WebP (alpha preserved on the cut-out) |
+| Largest dimension | 4096–6720 px | 2000 px |
+| Total weight | 55 MB | 1.1 MB (106–611 KB each) |
+
+Aspect ratios are untouched — every image is scaled, never stretched. The
+untouched originals remain in this branch's git history.
 
 **Licence:** supplied by the client, licence on file. Replace this line with the
 per-image source and licence before the board is published anywhere public.

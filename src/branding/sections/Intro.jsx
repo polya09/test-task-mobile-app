@@ -5,7 +5,7 @@ const QUALITIES = ['Energetic', 'Precise', 'Focused', 'Modern', 'Motivating', 'R
 export default function Intro() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <p className="sc-eyebrow">Brand stylescape · Stage 02</p>
+      <p className="sc-eyebrow">Brand stylescape</p>
 
       <div style={{ marginTop: 40 }}>
         <Wordmark width={860} />

@@ -181,31 +181,6 @@
   filter: drop-shadow(0 12px 18px rgba(28, 31, 35, 0.2));
 }
 
-.photo__tag {
-  position: absolute;
-  left: 22px;
-  top: 22px;
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 18px;
-  border-radius: 999px;
-  background: var(--k-graphite);
-  color: var(--k-paper);
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.photo__tag::before {
-  content: '';
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--k-coral);
-}
-
 .photo__caption {
   position: absolute;
   left: 22px;

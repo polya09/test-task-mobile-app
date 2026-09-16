@@ -53,9 +53,7 @@ export default function App() {
       </a>
 
       <header className="app__bar">
-        <p className="app__brand">
-          Kalora <span className="app__stage">STAGE 02</span>
-        </p>
+        <p className="app__brand">Kalora</p>
 
         <nav className="app__nav" aria-label="Sections">
           {ROUTES.map((r) => (

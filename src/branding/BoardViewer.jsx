@@ -51,7 +51,6 @@ export default function BoardViewer({ children }) {
         <p className="viewer__meta">
           <strong>KALORA — Brand stylescape</strong>
           <span>Designed at 3840 × 2160 px · 16:9</span>
-          <span>Stage 02 of 04</span>
         </p>
 
         <div className="viewer__zoom">

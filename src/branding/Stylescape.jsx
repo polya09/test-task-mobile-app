@@ -24,7 +24,7 @@ function Zone({ x, y, w, h, className = '', style, children, tag: Tag = 'div' })
   )
 }
 
-function Photo({ photo, caption, tag = 'Photo placeholder', captionTop = false, narrowCaption = false, className = '' }) {
+function Photo({ photo, caption, captionTop = false, narrowCaption = false, className = '' }) {
   const classes = ['photo', photo.surface && 'photo--surface', className].filter(Boolean)
   return (
     <figure className={classes.join(' ')}>
@@ -33,7 +33,6 @@ function Photo({ photo, caption, tag = 'Photo placeholder', captionTop = false, 
         alt={photo.alt}
         style={{ objectPosition: photo.focus, objectFit: photo.fit ?? 'cover' }}
       />
-      {photo.placeholder && <span className="photo__tag">{tag}</span>}
       {caption && (
         <figcaption
           className={[

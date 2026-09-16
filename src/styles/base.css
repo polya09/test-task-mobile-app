@@ -113,14 +113,6 @@ a {
   text-transform: uppercase;
 }
 
-.app__stage {
-  font-family: var(--k-font-text);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--k-lime);
-}
-
 .app__nav {
   display: flex;
   gap: 8px;
