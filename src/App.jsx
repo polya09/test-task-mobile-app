@@ -1,22 +1,19 @@
 /**
  * Minimal history-API router. Three routes are reserved from the start
- * (/branding, /design-system, /app); only /branding is built in Stage 2.
+ * (/branding, /design-system, /app). Stages 2 and 3 are built; /app is reserved.
  */
 import { useEffect, useState } from 'react'
 import Branding from './pages/Branding'
+import DesignSystem from './pages/DesignSystem'
 import Stub from './pages/Stub'
 
 const ROUTES = [
   { path: '/branding', label: 'Branding', ready: true },
-  { path: '/design-system', label: 'Design system', ready: false },
+  { path: '/design-system', label: 'Design system', ready: true },
   { path: '/app', label: 'App', ready: false },
 ]
 
 const STUBS = {
-  '/design-system': {
-    title: 'Design system',
-    text: 'Stage 3. Tokens, components and states are built here on top of the branding decisions.',
-  },
   '/app': {
     title: 'App screens',
     text: 'Stage 4. Flows and screens for the calorie calculator and the recipe finder.',
@@ -48,8 +45,8 @@ export default function App() {
 
   return (
     <div className="app">
-      <a className="skip-link" href="#stylescape">
-        Skip to the stylescape
+      <a className="skip-link" href={path === '/design-system' ? '#ds-scroll' : '#stylescape'}>
+        {path === '/design-system' ? 'Skip to the design system' : 'Skip to the stylescape'}
       </a>
 
       <header className="app__bar">
@@ -72,7 +69,13 @@ export default function App() {
       </header>
 
       <main className="app__main">
-        {stub ? <Stub title={stub.title} text={stub.text} /> : <Branding />}
+        {stub ? (
+          <Stub title={stub.title} text={stub.text} />
+        ) : path === '/design-system' ? (
+          <DesignSystem />
+        ) : (
+          <Branding />
+        )}
       </main>
     </div>
   )
