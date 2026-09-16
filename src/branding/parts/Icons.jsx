@@ -1,6 +1,13 @@
 /**
  * KALORA icon set — original outline icons drawn on a 24 px grid.
  * Consistent optical size, ~2 px strokes, rounded caps and rounded corners.
+ *
+ * Two glyphs carry interior detail that reads at editorial sizes but turns to
+ * a blob at 24 px: the flame's inner flame, and the recipe bowl's three
+ * ingredient circles (at r 1.3–2.1 a 1.75 px stroke nearly closes them).
+ * `detail="simple"` swaps in optically-corrected drawings for those two.
+ * The default is unchanged, so every existing call site renders exactly as
+ * before.
  */
 
 const PATHS = {
@@ -67,10 +74,31 @@ const PATHS = {
   ),
 }
 
+/**
+ * Optically-corrected variants for small sizes. The flame keeps the brand
+ * outline and drops its inner flame; the recipe bowl is narrowed from 17.2 to
+ * 14.4 units and its three closed circles become two open steam strokes.
+ */
+const SIMPLE = {
+  flame: (
+    <>
+      <path d="M12 2.8c3.6 3.6 6 6.3 6 9.9a6 6 0 0 1-12 0c0-2 .9-3.7 2.1-5 .5 1 1.2 1.7 2 2.2.4-2.7 0-4.6 1.9-7.1Z" />
+    </>
+  ),
+  recipe: (
+    <>
+      <path d="M4.8 11.9h14.4a7.2 7.2 0 0 1-14.4 0Z" />
+      <path d="M6.6 20.2h10.8" />
+      <path d="M10.3 8.2c0-1.1 1.1-1.6 1.1-2.7" />
+      <path d="M14.1 8.2c0-1.1 1.1-1.6 1.1-2.7" />
+    </>
+  ),
+}
+
 export const ICON_NAMES = ['search', 'scan', 'calculator', 'recipe', 'timer', 'flame', 'bookmark', 'profile']
 
-export default function Icon({ name, size = 24, stroke = 2, title, className }) {
-  const shape = PATHS[name]
+export default function Icon({ name, size = 24, stroke = 2, title, className, detail = 'full' }) {
+  const shape = (detail === 'simple' && SIMPLE[name]) || PATHS[name]
   if (!shape) return null
 
   return (

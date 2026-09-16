@@ -39,3 +39,137 @@
   --k-radius-l: 40px;
   --k-radius-xl: 64px;
 }
+
+/* ===================================================================
+   STAGE 3 — DESIGN SYSTEM TOKENS
+   These extend the brand tokens above; they never restate or override
+   them. Every --ds-* value either aliases a --k-* brand token or is a
+   documented derivation of one (noted inline with its contrast ratio).
+   =================================================================== */
+
+:root {
+  /* ---------- Surfaces (light is the primary theme) ---------- */
+  --ds-bg: var(--k-paper);                 /* page canvas */
+  --ds-surface: var(--k-surface);          /* cards, sheets, inputs */
+  --ds-surface-sunken: #f1efe9;            /* paper, one step down: wells, tracks */
+  --ds-surface-inverse: var(--k-graphite); /* reserved: selected + high-contrast only */
+
+  /* ---------- Ink ---------- */
+  --ds-text-primary: var(--k-graphite);    /* 16.5:1 on surface */
+  --ds-text-secondary: #4a4e55;            /* graphite lightened —  8.4:1 on surface */
+  --ds-text-muted: var(--k-muted);         /* 5.1:1 on surface, 4.6:1 on paper */
+  --ds-text-inverse: var(--k-paper);       /* 14.1:1 on graphite */
+  --ds-text-on-accent: var(--k-graphite);  /* the ink rule: never white on lime */
+  --ds-text-disabled: #82868c;             /* disabled is exempt from AA; held at 3.66:1 anyway */
+
+  /* ---------- Borders ---------- */
+  --ds-border-subtle: var(--k-border);     /* dividers + card edges, decorative */
+  --ds-border-control: #8e9289;            /* interactive boundaries, 3.17:1 on surface */
+  --ds-border-strong: var(--k-graphite);   /* focused / selected boundaries */
+  --ds-border-inverse: rgba(247, 245, 239, 0.24);
+
+  /* ---------- Brand + action (lime is ONLY brand / action / active) ---------- */
+  --ds-action: var(--k-lime);
+  --ds-action-hover: #bceb1c;              /* lime -6% L */
+  --ds-action-pressed: #a8d40c;            /* lime -14% L */
+  --ds-action-ink: var(--k-graphite);
+  --ds-action-quiet: #eefac2;              /* lime tint, for tertiary hover + active nav */
+  --ds-focus: var(--k-lime-deep);          /* 5.0:1 on surface */
+  --ds-focus-width: 2px;                   /* one ring, 2 px, never doubled */
+  --ds-focus-offset: 2px;
+
+  /* ---------- Status (never macro colours; always paired with an icon + label) ---------- */
+  --ds-success-ink: #446200;               /* deep lime darkened, 7.0:1 on surface */
+  --ds-success-surface: #eef6dc;
+  --ds-success-border: #bcd98a;
+  --ds-warning-ink: #8a5a00;               /* status amber — distinct from carb amber, 5.9:1 */
+  --ds-warning-surface: #fdf1dc;
+  --ds-warning-border: #e8c98f;
+  --ds-danger: var(--k-coral);             /* fill / indicator only, 3.1:1 */
+  --ds-danger-ink: #b3271b;                /* coral darkened for text, 6.5:1 on surface */
+  --ds-danger-surface: #ffecea;
+  --ds-danger-border: #ffc2bc;
+  --ds-info-ink: #2e3238;                  /* neutral: info never borrows fat blue */
+  --ds-info-surface: #eef0f1;
+  --ds-info-border: #d3d7d9;
+
+  /* ---------- Nutrition data only ---------- */
+  --ds-protein: var(--k-protein);
+  --ds-carbs: var(--k-carbs);
+  --ds-fat: var(--k-fat);
+  --ds-protein-track: #edfac2;
+  --ds-carbs-track: #ffeccf;
+  --ds-fat-track: #dff0fd;
+
+  /* ---------- Spacing — 8 px grid, 4 px half-step for icon gaps ---------- */
+  --ds-space-0: 0px;
+  --ds-space-1: 4px;
+  --ds-space-2: 8px;
+  --ds-space-3: 12px;
+  --ds-space-4: 16px;
+  --ds-space-5: 24px;
+  --ds-space-6: 32px;
+  --ds-space-7: 40px;
+  --ds-space-8: 48px;
+  --ds-space-9: 64px;
+  --ds-space-10: 80px;
+  --ds-space-11: 96px;
+
+  /* ---------- Radii — brand radii plus two component steps ---------- */
+  --ds-radius-xs: 8px;
+  --ds-radius-s: var(--k-radius-s);   /* 12 */
+  --ds-radius-m: 16px;                /* control default */
+  --ds-radius-l: var(--k-radius-m);   /* 24 — cards, sheets */
+  --ds-radius-xl: var(--k-radius-l);  /* 40 — hero panels */
+  --ds-radius-pill: 999px;
+
+  /* ---------- Borders ---------- */
+  --ds-border-width: 1px;
+  --ds-border-width-strong: 2px;
+
+  /* ---------- Elevation — graphite shadows, never coloured glows ---------- */
+  --ds-shadow-none: none;
+  --ds-shadow-sm: 0 1px 2px rgba(28, 31, 35, 0.06), 0 1px 1px rgba(28, 31, 35, 0.04);
+  --ds-shadow-md: 0 4px 12px rgba(28, 31, 35, 0.08), 0 1px 3px rgba(28, 31, 35, 0.05);
+  --ds-shadow-lg: 0 12px 32px rgba(28, 31, 35, 0.12), 0 2px 8px rgba(28, 31, 35, 0.06);
+  --ds-shadow-sheet: 0 -8px 40px rgba(28, 31, 35, 0.16);
+
+  /* ---------- Icon sizing ---------- */
+  --ds-icon-xs: 16px;
+  --ds-icon-s: 20px;
+  --ds-icon-m: 24px;  /* default, matches the 24 px icon grid */
+  --ds-icon-l: 32px;
+  --ds-icon-xl: 40px;
+
+  /* ---------- Controls ---------- */
+  --ds-target-min: 44px;   /* minimum touch target, every side */
+  --ds-control-h-sm: 36px; /* visual height; hit area padded back to 44 */
+  --ds-control-h-md: 44px;
+  --ds-control-h-lg: 52px;
+
+  /* ---------- Type scale ---------- */
+  --ds-display-size: 48px;   --ds-display-lh: 52px;
+  --ds-h1-size: 36px;        --ds-h1-lh: 42px;
+  --ds-h2-size: 28px;        --ds-h2-lh: 34px;
+  --ds-h3-size: 22px;        --ds-h3-lh: 28px;
+  --ds-num-xl-size: 40px;    --ds-num-xl-lh: 44px;
+  --ds-num-l-size: 28px;     --ds-num-l-lh: 32px;
+  --ds-num-m-size: 20px;     --ds-num-m-lh: 24px;
+  --ds-body-l-size: 17px;    --ds-body-l-lh: 26px;
+  --ds-body-m-size: 15px;    --ds-body-m-lh: 24px;
+  --ds-body-s-size: 13px;    --ds-body-s-lh: 20px;
+  --ds-label-size: 13px;     --ds-label-lh: 16px;
+  --ds-caption-size: 12px;   --ds-caption-lh: 16px;
+  --ds-overline-size: 11px;  --ds-overline-lh: 14px;
+
+  /* ---------- Layout grid ---------- */
+  --ds-grid-columns: 4;      /* mobile */
+  --ds-grid-gutter: 16px;
+  --ds-grid-margin: 20px;
+  --ds-phone-w: 390px;       /* reference device width for component previews */
+
+  /* ---------- Motion ---------- */
+  --ds-ease: cubic-bezier(0.2, 0, 0.1, 1);
+  --ds-dur-fast: 120ms;
+  --ds-dur-base: 180ms;
+}

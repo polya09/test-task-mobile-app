@@ -8,6 +8,7 @@ import './styles/tokens.css'
 import './styles/base.css'
 import './styles/board.css'
 import './styles/stylescape.css'
+import './styles/design-system.css'
 
 import App from './App'
 
