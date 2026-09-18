@@ -1,9 +1,11 @@
 # Publishes the three deliverable pages to GitHub Pages on every push to main.
 #
 # The site is built in CI from source, so `dist/` is never committed. The build
-# also writes dist/404.html — GitHub Pages serves it for any path it cannot
-# resolve to a file, which is how a direct request for /branding or a browser
-# refresh reaches the router instead of a Pages 404.
+# emits each of the three routes as a real directory index —
+# dist/branding/index.html and so on — which GitHub Pages resolves itself, so a
+# direct request for /branding or a browser refresh returns a genuine 200 with
+# the URL intact. dist/404.html is written too, as the catch-all for any other
+# path.
 name: Deploy to GitHub Pages
 
 on:

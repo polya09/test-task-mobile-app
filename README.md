@@ -158,11 +158,15 @@ Two details make client-side routes work on a static host:
   builds only. The router wears that base at the edges — reading
   `location.pathname` and writing a URL — so no route literal has to know about
   it, and `npm run dev` still serves from the root.
-- **`404.html`.** GitHub Pages has no rewrite rule, so a direct request for
-  `/branding`, or a browser refresh on it, would 404 before the app boots. The
-  build writes `dist/404.html` as a copy of `index.html`; Pages serves it for
-  any unresolved path, the app boots and the router renders the right route with
-  the URL preserved.
+- **Real route pages.** GitHub Pages has no rewrite rule, so a direct request
+  for `/branding`, or a browser refresh on it, would never reach the router. The
+  build therefore emits each of the three routes as a real directory index —
+  `dist/branding/index.html`, `dist/design-system/index.html`,
+  `dist/app/index.html` — which Pages resolves itself. Direct navigation and
+  refresh both return a genuine **200** with the URL intact: no redirect, no
+  querystring rewrite, and no 404 status on a page that exists.
+  `dist/404.html` is written as well, as the catch-all for any other path, and
+  `public/.nojekyll` keeps every path served verbatim.
 
 To enable it once in the repository: **Settings → Pages → Build and deployment →
 Source: GitHub Actions**.
