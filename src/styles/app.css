@@ -340,6 +340,13 @@
   /* No gap: each cell carries its own padding, so the targets stay adjacent
      and full-width rather than losing 24 px to six gutters. */
   gap: 0;
+  /* Every cell is the same box: the columns are equal fractions, and the row
+     stretches all seven to the tallest of them. */
+  align-items: stretch;
+}
+
+.ap-week__days > li {
+  display: flex;
 }
 
 /* 44 px min-height keeps every date a real target at 390 px, where each
@@ -350,6 +357,9 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
+  /* Fill the stretched grid row, so the selected fill covers the whole cell
+     — dot slot included — and the outlined reference day matches it exactly. */
+  flex: 1 1 auto;
   width: 100%;
   min-height: var(--ds-target-min);
   padding: var(--ds-space-2) 0;
@@ -406,19 +416,22 @@
   font-weight: 700;
 }
 
-/* A day with entries carries a dot, so the strip says where there is
-   something to review before you tap it. */
-.ap-week__day.has-log .ap-week__date::after {
-  content: '';
-  display: block;
+/* A day with entries carries a dot, so the strip says where there is something
+   to review before you tap it. The slot is reserved in every cell and only
+   painted here, so the dot never changes a cell's height or alignment. */
+.ap-week__dot {
+  flex: none;
   width: 4px;
   height: 4px;
-  margin: 2px auto 0;
   border-radius: var(--ds-radius-pill);
+  background: transparent;
+}
+
+.ap-week__day.has-log .ap-week__dot {
   background: var(--ds-text-muted);
 }
 
-.ap-week__day.is-selected.has-log .ap-week__date::after {
+.ap-week__day.is-selected.has-log .ap-week__dot {
   background: var(--ds-action-ink);
 }
 

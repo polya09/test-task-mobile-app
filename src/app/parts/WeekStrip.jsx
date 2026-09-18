@@ -78,6 +78,10 @@ export default function WeekStrip({ weekStart, selected, onSelect, onWeek, logge
                   {weekdayInitial(date)}
                 </span>
                 <span className="ap-week__date tnum">{dayOfMonth(date)}</span>
+                {/* Always rendered, coloured only when the day has entries:
+                    a slot that appears and disappears would change the cell's
+                    height and break the row's alignment. */}
+                <span className="ap-week__dot" aria-hidden="true" />
               </button>
             </li>
           )
