@@ -1,4 +1,4 @@
-# KALORA — Mobile Calorie & Recipe Companion
+Mobile Calorie & Recipe Companion
 
 A UX/UI case study for a mobile calorie and macronutrient calculator.
 
