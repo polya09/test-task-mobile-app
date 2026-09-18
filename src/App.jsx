@@ -1,6 +1,12 @@
 /**
- * Minimal history-API router. Three routes, all three now built:
+ * Minimal history-API router. Three routes, all three built:
  * /branding (stage 2), /design-system (stage 3) and /app (stage 4).
+ *
+ * Routes are written here without a prefix and wear the deployment base only
+ * at the edges — reading `location.pathname` and writing a URL. Locally the
+ * base is `/` and nothing changes; on GitHub Pages it is the repo name, so
+ * /branding is served from /test-task-mobile-app/branding without a single
+ * route literal in this file having to know that.
  */
 import { useEffect, useState } from 'react'
 import Branding from './pages/Branding'
@@ -13,8 +19,18 @@ const ROUTES = [
   { path: '/app', label: 'App', ready: true },
 ]
 
+/** '' when served from the root, '/test-task-mobile-app' on GitHub Pages. */
+const BASE = import.meta.env.BASE_URL.replace(/\/+$/, '')
+
+/** A route as it must appear in the address bar. */
+const withBase = (route) => `${BASE}${route}`
+
 function normalise(pathname) {
-  const clean = pathname.replace(/\/+$/, '') || '/'
+  const withoutBase =
+    BASE && (pathname === BASE || pathname.startsWith(`${BASE}/`))
+      ? pathname.slice(BASE.length)
+      : pathname
+  const clean = withoutBase.replace(/\/+$/, '') || '/'
   return clean === '/' ? '/branding' : clean
 }
 
@@ -30,7 +46,7 @@ export default function App() {
   const go = (event, target) => {
     event.preventDefault()
     if (target === path) return
-    window.history.pushState({}, '', target)
+    window.history.pushState({}, '', withBase(target))
     setPath(target)
   }
 
@@ -55,7 +71,7 @@ export default function App() {
             <a
               key={r.path}
               className="app__link"
-              href={r.path}
+              href={withBase(r.path)}
               aria-current={path === r.path ? 'page' : undefined}
               aria-disabled={r.ready ? undefined : 'true'}
               onClick={(e) => go(e, r.path)}
