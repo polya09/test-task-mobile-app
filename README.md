@@ -97,11 +97,15 @@ src/
     data/
       foods.js                27 foods and packaged products, macros per basis
       recipes.js              13 recipes, macros per serving, tags, method
+      days.js                 the live day and the sample days behind it
+      photos.js               recipe photography manifest
+    dates.js                  week arithmetic and the date formats
     screens/                  Today, Log, Scan, DishBuilder, Recipes,
                               RecipeDetail, Targets
     sheets/                   PortionSheet, ServingsSheet, FiltersSheet,
                               IngredientSheet
-    parts/                    Sheet (focus-trapped overlay), MacroReadout
+    parts/                    Sheet (focus-trapped overlay), MacroReadout,
+                              WeekStrip
   styles/
     tokens.css                brand tokens (--k-*) + Stage 3 tokens (--ds-*)
     base.css                  reset and app shell
@@ -364,6 +368,51 @@ documentation board renders identically (measured below).
 CSS that extends a `ds-*` component is scoped under `.ap-viewport`, so the
 documentation board cannot shift by a pixel.
 
+### Reviewing a previous day
+
+A compact weekly strip sits between the Today header and the progress card:
+the month and year with a week control either side, then seven day cells. The
+header itself is untouched — same title, same subtitle, same Add food button —
+and only the subtitle's text follows the selection. The page heading always
+reads "Today"; the progress card names the day its own numbers belong to, so a
+past day is never mislabelled.
+
+Selecting a date re-reads the ring, the remaining calories, the remaining
+macros, the macro bars and the logged list from that day. Nothing else on the
+screen changes shape.
+
+| | |
+| - | - |
+| Reference day | Thursday 16 September 2027 — 2027 is the year that falls on a Thursday, so the weekday labels agree with the copy the screen has always shown |
+| Selected | lime fill, a heavier figure and `aria-current="date"` — never colour alone |
+| Reference day, unselected | a control-border outline |
+| Has entries | a dot under the figure, so the strip says where there is something to review |
+| Future | disabled, and the next-week control stops at the week holding the reference day |
+| Past day | read-only: Add food is disabled and entries are not tappable, because the log is a record of what happened |
+
+Sample days, all derived through `kcal()` from the same food catalogue:
+
+| Day | Entries | Energy | Left |
+| --- | ------- | ------ | ---- |
+| Friday 10 September | 6 | 1,387 kcal | 613 |
+| Saturday 11 September | 7 | 1,399 kcal | 601 |
+| Monday 13 September | 10 | 1,766 kcal | 234 |
+| Tuesday 14 September | 7 | 1,191 kcal | 809 |
+| Wednesday 15 September | — | 0 kcal | 2,000 |
+| **Thursday 16 September** | **5** | **1,170 kcal** | **830** |
+
+Wednesday is deliberately empty: a day you forgot to log is a real state, and
+the screen has to have something to say about it.
+
+`entries` in the store is still the reference day and nothing else, so every
+screen that asks "what is left today?" — the recipe fit test, the portion
+sheets, the Log screen's recents, Targets — keeps reading it unchanged. Past
+days are a separate read-only map, and logging always returns to the live day.
+
+At 390 px the seven columns divide 350 px of page width, so the strip takes the
+small side padding and no column gap: each day cell is 47.4 × 64 px, clear of
+the 44 px minimum. At 430 px it is 53.1 × 64 px.
+
 ### Error, focus, and the radius hierarchy
 
 Two treatments were tightened after visual review.
@@ -416,10 +465,13 @@ Built with `npm run build`, served from `dist/` and driven in Chromium.
 - **Layout at 390 px and 430 px**, every screen scrolled to its end: **zero
   elements overflowed by an in-flow child, zero horizontal page scroll**.
 - **Touch targets.** Every button, link, input, select and textarea measured,
-  counting the `::before` / `::after` hit-area padding: **zero below 44 × 44 px**.
+  counting the `::before` / `::after` hit-area padding: **zero below 44 × 44 px**,
+  the seven day cells of the weekly strip included.
 - **Contrast.** Every text node measured against its real composited backdrop:
-  the only pair below AA is a **disabled** button at 3.18:1, which WCAG 1.4.3
-  exempts and which the design system already documents at that ratio.
+  the only pairs below AA are **disabled** controls — a button at 3.18:1 and the
+  future dates in the weekly strip at 3.66:1, the documented `--ds-text-disabled`
+  value. WCAG 1.4.3 exempts disabled controls, and the design system already
+  documents both ratios.
 - **Keyboard.** The 3 px `--ds-focus` ring appears on Tab; opening a sheet moves
   focus into the dialog, Tab is trapped inside it, Escape closes it and focus
   returns to the control that opened it.

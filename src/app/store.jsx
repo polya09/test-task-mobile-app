@@ -9,66 +9,12 @@
  * is why the day total on Today is exactly the sum of the rows beneath it.
  */
 import { createContext, useContext, useMemo, useReducer } from 'react'
-import { FOOD_BY_ID } from './data/foods'
-import {
-  DEFAULT_TARGETS,
-  dishMacrosFor,
-  portionLabel,
-  portionMacros,
-  recipeServingMacros,
-} from './nutrition'
+import { DEFAULT_TARGETS, dishMacrosFor, portionLabel, portionMacros, recipeServingMacros } from './nutrition'
 import { RECIPE_BY_ID } from './data/recipes'
+import { HISTORY, SEED_DISH, SEED_ENTRIES } from './data/days'
+import { REFERENCE_DATE, addDays, startOfWeek } from './dates'
 
-/* ---------------------------------------------------------------- *
- * Seed — the Stage 3 reference day, rebuilt from the catalogue.      *
- * Scaling these five portions returns 72 P / 135 C / 38 F, the       *
- * 1,170 kcal the design system documents.                            *
- * ---------------------------------------------------------------- */
-
-export const SEED_DISH = {
-  id: 'chicken-bowl',
-  name: 'Chicken Bowl',
-  servings: 1,
-  items: [
-    { foodId: 'chicken-breast', amount: 110 },
-    { foodId: 'brown-rice', amount: 200 },
-    { foodId: 'avocado', amount: 55 },
-    { foodId: 'chickpeas', amount: 25 },
-  ],
-}
-
-const foodEntry = (id, foodId, amount, time) => {
-  const food = FOOD_BY_ID[foodId]
-  return {
-    id,
-    kind: 'food',
-    foodId,
-    amount,
-    time,
-    name: food.name,
-    detail: portionLabel(food, amount),
-    macros: portionMacros(food, amount),
-  }
-}
-
-const dishEntry = (id, dish, servings, time) => ({
-  id,
-  kind: 'dish',
-  dishId: dish.id,
-  servings,
-  time,
-  name: dish.name,
-  detail: `${servings} serving${servings === 1 ? '' : 's'} · ${dish.items.length} ingredients`,
-  macros: dishMacrosFor(dish, servings),
-})
-
-const SEED_ENTRIES = [
-  foodEntry('seed-oats', 'rolled-oats', 60, '07:20'),
-  foodEntry('seed-yogurt', 'greek-yogurt', 150, '07:20'),
-  foodEntry('seed-banana', 'banana', 118, '10:05'),
-  dishEntry('seed-bowl', SEED_DISH, 1, '13:15'),
-  foodEntry('seed-almonds', 'almonds', 30, '16:40'),
-]
+export { SEED_DISH, REFERENCE_DATE }
 
 /** A deterministic clock, so a walkthrough reads the same every time. */
 const FIRST_LOG_MINUTES = 17 * 60 + 10
@@ -81,7 +27,16 @@ const clockAt = (count) => {
 
 export const INITIAL = {
   targets: DEFAULT_TARGETS,
+
+  /* `entries` is always the reference day — the only day that can be logged
+     to — so every screen that asks "what is left today?" keeps reading it
+     unchanged. `history` is the read-only sample behind it, and
+     `selectedDate` is only ever what the Today screen is showing. */
   entries: SEED_ENTRIES,
+  history: HISTORY,
+  selectedDate: REFERENCE_DATE,
+  weekStart: startOfWeek(REFERENCE_DATE),
+
   dishes: [SEED_DISH],
   savedRecipes: ['grilled-chicken-salad'],
   logged: 0,
@@ -118,6 +73,13 @@ function reducer(state, action) {
     case 'toast':
       return { ...state, toast: action.toast }
 
+    /* ---- the day being reviewed ---- */
+    case 'select-date':
+      return { ...state, selectedDate: action.date }
+    /* Paging the week never moves the selection: you look around, then pick. */
+    case 'week':
+      return { ...state, weekStart: addDays(state.weekStart, action.delta * 7) }
+
     /* ---- the day ---- */
     case 'add-entry': {
       const entry = { ...action.entry, id: nextId(), time: clockAt(state.logged) }
@@ -128,6 +90,9 @@ function reducer(state, action) {
         sheet: null,
         stack: [],
         tab: 'today',
+        // Logging is only ever possible on the reference day, so land there.
+        selectedDate: REFERENCE_DATE,
+        weekStart: startOfWeek(REFERENCE_DATE),
         toast: { title: action.toastTitle, entryId: entry.id },
       }
     }
@@ -197,7 +162,7 @@ function reducer(state, action) {
     }
 
     case 'reset':
-      return { ...INITIAL, entries: SEED_ENTRIES }
+      return { ...INITIAL, entries: SEED_ENTRIES, history: HISTORY }
 
     default:
       return state
@@ -248,5 +213,12 @@ export const buildRecipeEntry = (recipe, servings) => ({
   detail: `${servings} serving${servings === 1 ? '' : 's'}`,
   macros: recipeServingMacros(recipe, servings),
 })
+
+/**
+ * The entries for any date. The reference day is live and mutable; every other
+ * day is the read-only sample, so a date with no plan is simply empty.
+ */
+export const entriesForDate = (state, date) =>
+  date === REFERENCE_DATE ? state.entries : (state.history[date] ?? [])
 
 export { RECIPE_BY_ID }

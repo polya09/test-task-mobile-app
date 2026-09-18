@@ -287,6 +287,150 @@
   color: var(--ds-warning-ink);
 }
 
+/* ---------- Weekly date selector (Today) ----------
+ *
+ * Tier 2 container at 16 px holding tier 3 day cells at 12 px, so the strip
+ * sits inside the radius hierarchy rather than beside it. Nothing here is a
+ * new value: the lime fill, the graphite ink on it and every measurement
+ * resolve to existing tokens.
+ */
+
+.ap-week {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-2);
+  /* Side padding is the small step, not the medium one: at 390 px the seven
+     columns have to divide 350 px of page width and still clear the 44 px
+     touch minimum. 8 px a side leaves 47 px a column. */
+  padding: var(--ds-space-2) var(--ds-space-2) var(--ds-space-3);
+  border: var(--ds-border-width) solid var(--ds-border-subtle);
+  border-radius: var(--ds-radius-m);
+  background: var(--ds-surface);
+  box-shadow: var(--ds-shadow-sm);
+}
+
+.ap-week__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-space-2);
+}
+
+.ap-week__month {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: center;
+  font-family: var(--k-font-display);
+  font-size: var(--ds-body-m-size);
+  line-height: var(--ds-body-m-lh);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ap-week__days {
+  /* base.css resets `ul`, not `ol` — without this the strip renders 1.–7. */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  /* No gap: each cell carries its own padding, so the targets stay adjacent
+     and full-width rather than losing 24 px to six gutters. */
+  gap: 0;
+}
+
+/* 44 px min-height keeps every date a real target at 390 px, where each
+   column is only about 44 px wide. */
+.ap-week__day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  min-height: var(--ds-target-min);
+  padding: var(--ds-space-2) 0;
+  border: var(--ds-border-width) solid transparent;
+  border-radius: var(--ds-radius-s);
+  background: none;
+  font-family: var(--k-font-text);
+  color: var(--ds-text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--ds-dur-fast) var(--ds-ease),
+    border-color var(--ds-dur-fast) var(--ds-ease);
+}
+
+.ap-week__day:hover:not(:disabled):not(.is-selected) {
+  background: var(--ds-surface-sunken);
+}
+
+.ap-week__initial {
+  font-size: var(--ds-overline-size);
+  line-height: var(--ds-overline-lh);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ds-text-muted);
+}
+
+.ap-week__date {
+  font-family: var(--k-font-display);
+  font-size: var(--ds-body-m-size);
+  line-height: var(--ds-body-m-lh);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The reference day, when it is not the one being reviewed. */
+.ap-week__day.is-today:not(.is-selected) {
+  border-color: var(--ds-border-control);
+}
+
+/* Selected: lime fill, graphite ink, a heavier figure — and aria-current in
+   the markup, so the state survives greyscale. */
+.ap-week__day.is-selected {
+  background: var(--ds-action);
+  border-color: var(--ds-action);
+  color: var(--ds-action-ink);
+}
+
+.ap-week__day.is-selected .ap-week__initial {
+  color: var(--ds-action-ink);
+}
+
+.ap-week__day.is-selected .ap-week__date {
+  font-weight: 700;
+}
+
+/* A day with entries carries a dot, so the strip says where there is
+   something to review before you tap it. */
+.ap-week__day.has-log .ap-week__date::after {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 4px;
+  margin: 2px auto 0;
+  border-radius: var(--ds-radius-pill);
+  background: var(--ds-text-muted);
+}
+
+.ap-week__day.is-selected.has-log .ap-week__date::after {
+  background: var(--ds-action-ink);
+}
+
+.ap-week__day:disabled {
+  color: var(--ds-text-disabled);
+  cursor: not-allowed;
+}
+
+.ap-week__day:disabled .ap-week__initial {
+  color: var(--ds-text-disabled);
+}
+
 /* ---------- Scan ---------- */
 
 .ap-scan {
