@@ -5,6 +5,12 @@
  * error message and 44 px minimum height are defined in exactly one place.
  * Error is never colour alone: the field gains a 2 px border, an alert icon
  * and a written message.
+ *
+ * Each control is uncontrolled by default, which is what the documentation
+ * needs. Passing `onChange` switches the same control to a controlled one —
+ * `value` becomes the source of truth and the stepper buttons become live.
+ * Nothing else about the rendered markup changes, so a documented field and
+ * a field in the product are the same field.
  */
 import { useId } from 'react'
 import Icon from '../../branding/parts/Icons'
@@ -46,8 +52,9 @@ function Shell({ label, hint, error, required, id, children, state, disabled }) 
   )
 }
 
-export function TextField({ label, hint, error, value, placeholder, state, disabled, required, ...rest }) {
+export function TextField({ label, hint, error, value, placeholder, state, disabled, required, onChange, ...rest }) {
   const id = useId()
+  const bind = onChange ? { value: value ?? '', onChange } : { defaultValue: value }
   return (
     <Shell {...{ label, hint, error, required, id, state, disabled }}>
       {(describedBy) => (
@@ -56,7 +63,7 @@ export function TextField({ label, hint, error, value, placeholder, state, disab
             id={id}
             type="text"
             className="ds-input__control"
-            defaultValue={value}
+            {...bind}
             placeholder={placeholder}
             disabled={disabled}
             aria-invalid={error ? 'true' : undefined}
@@ -69,8 +76,19 @@ export function TextField({ label, hint, error, value, placeholder, state, disab
   )
 }
 
-export function SearchField({ label = 'Search foods', hint, error, value, placeholder = 'Search foods', state, disabled, onClear }) {
+export function SearchField({
+  label = 'Search foods',
+  hint,
+  error,
+  value,
+  placeholder = 'Search foods',
+  state,
+  disabled,
+  onClear,
+  onChange,
+}) {
   const id = useId()
+  const bind = onChange ? { value: value ?? '', onChange } : { defaultValue: value }
   return (
     <Shell {...{ label, hint, error, id, state, disabled }}>
       {(describedBy) => (
@@ -80,7 +98,7 @@ export function SearchField({ label = 'Search foods', hint, error, value, placeh
             id={id}
             type="search"
             className="ds-input__control"
-            defaultValue={value}
+            {...bind}
             placeholder={placeholder}
             disabled={disabled}
             aria-invalid={error ? 'true' : undefined}
@@ -97,8 +115,32 @@ export function SearchField({ label = 'Search foods', hint, error, value, placeh
   )
 }
 
-export function NumberField({ label, hint, error, value = 0, unit, step = 5, state, disabled, min = 0 }) {
+export function NumberField({
+  label,
+  hint,
+  error,
+  value = 0,
+  unit,
+  step = 5,
+  state,
+  disabled,
+  min = 0,
+  max,
+  onChange,
+}) {
   const id = useId()
+  const controlled = typeof onChange === 'function'
+  const clamp = (n) => {
+    const bounded = Math.max(min, max === undefined ? n : Math.min(max, n))
+    return Number.isFinite(bounded) ? bounded : min
+  }
+  const nudge = (delta) => onChange(clamp(Number(value) + delta))
+  const bind = controlled
+    ? {
+        value: String(value ?? ''),
+        onChange: (e) => onChange(e.target.value === '' ? '' : Number(e.target.value)),
+      }
+    : { defaultValue: value }
   return (
     <Shell {...{ label, hint, error, id, state, disabled }}>
       {(describedBy) => (
@@ -107,7 +149,8 @@ export function NumberField({ label, hint, error, value = 0, unit, step = 5, sta
             type="button"
             className="ds-stepper__btn"
             aria-label={`Decrease by ${step}`}
-            disabled={disabled}
+            disabled={disabled || (controlled && Number(value) <= min)}
+            onClick={controlled ? () => nudge(-step) : undefined}
           >
             <span aria-hidden="true">−</span>
           </button>
@@ -117,9 +160,10 @@ export function NumberField({ label, hint, error, value = 0, unit, step = 5, sta
               type="number"
               inputMode="numeric"
               className="ds-stepper__control tnum"
-              defaultValue={value}
+              {...bind}
               step={step}
               min={min}
+              max={max}
               disabled={disabled}
               aria-invalid={error ? 'true' : undefined}
               aria-describedby={describedBy}
@@ -134,7 +178,8 @@ export function NumberField({ label, hint, error, value = 0, unit, step = 5, sta
             type="button"
             className="ds-stepper__btn"
             aria-label={`Increase by ${step}`}
-            disabled={disabled}
+            disabled={disabled || (controlled && max !== undefined && Number(value) >= max)}
+            onClick={controlled ? () => nudge(step) : undefined}
           >
             <span aria-hidden="true">+</span>
           </button>
@@ -144,8 +189,11 @@ export function NumberField({ label, hint, error, value = 0, unit, step = 5, sta
   )
 }
 
-export function SelectField({ label, hint, error, value, options = [], state, disabled }) {
+export function SelectField({ label, hint, error, value, options = [], state, disabled, onChange }) {
   const id = useId()
+  const bind = onChange
+    ? { value: value ?? '', onChange: (e) => onChange(e.target.value) }
+    : { defaultValue: value }
   return (
     <Shell {...{ label, hint, error, id, state, disabled }}>
       {(describedBy) => (
@@ -153,7 +201,7 @@ export function SelectField({ label, hint, error, value, options = [], state, di
           <select
             id={id}
             className="ds-input__control"
-            defaultValue={value}
+            {...bind}
             disabled={disabled}
             aria-invalid={error ? 'true' : undefined}
             aria-describedby={describedBy}
@@ -171,8 +219,9 @@ export function SelectField({ label, hint, error, value, options = [], state, di
   )
 }
 
-export function TextArea({ label, hint, error, value, placeholder, rows = 3, state, disabled }) {
+export function TextArea({ label, hint, error, value, placeholder, rows = 3, state, disabled, onChange }) {
   const id = useId()
+  const bind = onChange ? { value: value ?? '', onChange } : { defaultValue: value }
   return (
     <Shell {...{ label, hint, error, id, state, disabled }}>
       {(describedBy) => (
@@ -181,7 +230,7 @@ export function TextArea({ label, hint, error, value, placeholder, rows = 3, sta
             id={id}
             className="ds-input__control"
             rows={rows}
-            defaultValue={value}
+            {...bind}
             placeholder={placeholder}
             disabled={disabled}
             aria-invalid={error ? 'true' : undefined}
