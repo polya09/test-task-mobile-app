@@ -98,6 +98,10 @@ export function RecipeCard({ recipe, thumb, onOpen, onSave, saved = false, note,
     <Card className="ds-recipecard">
       <div className="ds-recipecard__row">
         {thumb ? (
+          /* Decorative by design: the recipe's name is the next thing in the
+             card, so describing the photograph here would make a screen
+             reader announce the same dish twice. The description lives on the
+             detail screen's hero, where the image carries the information. */
           <img
             className="ds-recipecard__thumb"
             src={thumb.src}

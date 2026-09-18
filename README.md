@@ -308,11 +308,42 @@ misstated.
 
 ### Photography
 
-Only two of the four licensed photographs depict a dish, so only those two
-recipes carry an image; the rest use the design system's documented recipe-glyph
-placeholder rather than borrowing a photograph of something they are not. The
-chicken-salad cut-out is never left floating — it gets a lit surface, a defined
-edge and a contact shadow, the same rule the stylescape states.
+Four recipes carry a photograph of the dish they actually are; the rest use the
+design system's documented recipe-glyph placeholder rather than borrowing a
+photograph of something they are not. The placeholder reserves the same 72 px
+box, so a photographed card and a placeholder card are geometrically identical
+and a list of them stays aligned.
+
+Every dish photograph is a transparent cut-out, so none is left floating — each
+gets a lit surface, a defined edge and a contact shadow that follows the plate's
+alpha, the same rule the stylescape states. `object-fit: contain` throughout
+means the plate is never cropped or stretched, in a 72 px thumbnail or a 4:3
+hero.
+
+| Recipe | File | Source |
+| ------ | ---- | ------ |
+| Grilled Chicken Salad | `photo-dish-chicken-salad.webp` | Stage 2, licensed |
+| Cottage Cheese & Tomato Toast | `photo-dish-cottage-cheese-toast.webp` | Stage 4 |
+| Herb Omelette with Greens | `photo-dish-herb-omelette.webp` | Stage 4 |
+| Grilled Pear & Bacon Spinach Salad | `photo-dish-pear-bacon-salad.webp` | Stage 4 |
+
+The three Stage 4 files were supplied at 1254 × 1254 and normalised on the
+plate itself rather than on the alpha bounds — the soft shadow reaches the
+source edge and would otherwise pull the centre off to one side. Every plate now
+measures 792 px inside a 900 px square, so the three read at identical scale
+wherever they appear. 900 px is set by the largest on-screen use: the 4:3 hero
+at the 430 px device width, less its 24 px image padding, is 274 CSS px — 824 px
+at DPR 3.
+
+Re-encoded as WebP at quality 84: **1,316 KB → 734 KB**, measured at 3.2–3.3
+RMSE against the decoded source composited on white and resampled to that
+824 px display size. That is about 1.3% of the 0–255 range, which is not visible
+at any size the app renders.
+
+Alt text is written per photograph and used on the detail hero, where the image
+carries the information. The card thumbnail is deliberately `alt=""`: the recipe
+name is the next thing in the card, so describing the photograph there would
+make a screen reader announce the same dish twice.
 
 ### What Stage 4 added to the design system
 

@@ -5,12 +5,13 @@
  * the energy figure on the card, in the detail header and in the Servings
  * sheet is `kcal(macros)` in every case.
  *
- * Photography: only two of the four licensed photographs depict a dish, so
- * only those two recipes carry an image. The rest use the design system's
- * documented recipe-glyph placeholder rather than borrowing a photograph of
- * something they are not.
+ * Photography: four recipes carry a photograph of the dish they actually are.
+ * The rest use the design system's documented recipe-glyph placeholder rather
+ * than borrowing a photograph of something they are not — the card reserves
+ * the same 72 px box either way, so a row of cards stays aligned.
  */
 import { PHOTOS } from '../../branding/photos'
+import { DISH_PHOTOS } from './photos'
 
 export const GOAL_FILTERS = ['Any goal', 'Cut', 'Maintain', 'Build']
 export const TIME_FILTERS = [
@@ -83,7 +84,7 @@ export const RECIPES = [
     serves: 2,
     goal: 'Maintain',
     diets: ['Gluten-free'],
-    photo: PHOTOS.hero,
+    photo: DISH_PHOTOS.pearBaconSalad,
     ingredients: [
       { name: 'Baby spinach', amount: '120 g' },
       { name: 'Pears', amount: '2 firm' },
@@ -109,7 +110,7 @@ export const RECIPES = [
     serves: 1,
     goal: 'Cut',
     diets: ['Vegetarian', 'Gluten-free'],
-    photo: null,
+    photo: DISH_PHOTOS.herbOmelette,
     ingredients: [
       { name: 'Eggs', amount: '3 large' },
       { name: 'Flat-leaf parsley', amount: '10 g' },
@@ -236,7 +237,7 @@ export const RECIPES = [
     serves: 1,
     goal: 'Cut',
     diets: ['Vegetarian'],
-    photo: null,
+    photo: DISH_PHOTOS.cottageCheeseToast,
     ingredients: [
       { name: 'Wholemeal bread', amount: '2 slices' },
       { name: 'Cottage cheese', amount: '150 g' },
