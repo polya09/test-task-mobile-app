@@ -2,27 +2,17 @@
 
 ---
 
-Live demo
-
 | | |
 | --- | --- |
 | **Stylescape** | **https://polya09.github.io/test-task-mobile-app/branding** |
 | **Design System** | **https://polya09.github.io/test-task-mobile-app/design-system** |
 | **Key Flows** | **https://polya09.github.io/test-task-mobile-app/app** |
 
-
-| **Video presentation** | **https://www.loom.com/share/e0f16c37db4d44b1b858bf64d752445c** |
-
 ---
 
-## User stories
+## Video presentation
 
-1. **Calculate calories for a specific product or a custom dish.**
-2. **Find a recipe that fits the user's remaining calories and macro targets.**
-
-The prototype covers these two and nothing else. There is deliberately no
-onboarding, authentication, subscription, notification, social feature or
-shopping list.
+**https://www.loom.com/share/e0f16c37db4d44b1b858bf64d752445c** 
 
 ---
 
@@ -37,8 +27,6 @@ and a recipe detail screen, and four bottom sheets.
   read-only.
 - **Log** — search 27 foods and packaged products, reuse a saved dish, or
   re-add something logged earlier.
-- **Scan** — a simulated barcode read, labelled as simulated throughout. There
-  is no camera in a prototype and the interface says so.
 - **Portion & calories** — the calculation itself. Macros are held per 100 g,
   100 ml or one piece, scaled by the portion, and the ring, the bars and the
   button's figure move together.
