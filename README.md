@@ -1,15 +1,8 @@
-Mobile Calorie & Recipe Companion
-
-A UX/UI case study for a mobile calorie and macronutrient calculator.
-
-KALORA is aimed at active adults aged 20–40 who train, cut, maintain or build.
-The case study runs from brand to design system to a working prototype, and is
-published as **three separate deliverable pages** — there is no landing page and
-no presentation hub.
+## Design Test Task
 
 ---
 
-## Live demo
+Live demo
 
 | | |
 | --- | --- |
