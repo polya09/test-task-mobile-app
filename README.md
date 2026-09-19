@@ -6,11 +6,12 @@ Live demo
 
 | | |
 | --- | --- |
-| **Branding / Stylescape** | **https://polya09.github.io/test-task-mobile-app/branding** |
+| **Stylescape** | **https://polya09.github.io/test-task-mobile-app/branding** |
 | **Design System** | **https://polya09.github.io/test-task-mobile-app/design-system** |
-| **Key Design Screens / Key Flows** | **https://polya09.github.io/test-task-mobile-app/app** |
+| **Key Flows** | **https://polya09.github.io/test-task-mobile-app/app** |
 
-Opening the site root redirects to **Branding / Stylescape**.
+
+| **Video presentation** | **https://www.loom.com/share/e0f16c37db4d44b1b858bf64d752445c** |
 
 ---
 
@@ -22,16 +23,6 @@ Opening the site root redirects to **Branding / Stylescape**.
 The prototype covers these two and nothing else. There is deliberately no
 onboarding, authentication, subscription, notification, social feature or
 shopping list.
-
----
-
-## The three deliverables
-
-| Route | Deliverable | What it is |
-| ----- | ----------- | ---------- |
-| `/branding` | Branding / Stylescape | One fixed 3840 × 2160 composition: wordmark, app icon, colour, typography, motifs and photography direction |
-| `/design-system` | Design System | Thirteen documented sections — tokens, components and rules — measured rather than asserted |
-| `/app` | Key Design Screens / Key Flows | The clickable prototype: five destinations, two pushed screens and four sheets |
 
 ---
 
